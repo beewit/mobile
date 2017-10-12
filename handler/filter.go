@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"strings"
-
 	"github.com/beewit/beekit/utils"
 	"github.com/beewit/beekit/utils/convert"
 	"github.com/beewit/beekit/utils/enum"
@@ -77,12 +75,12 @@ func Filter(next echo.HandlerFunc) echo.HandlerFunc {
 //微信检测
 func WechatFilter(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		ur := c.Request().URL
-		global.Log.Warning(ur.Hostname())
-		//scheme := "http://"
-		//if c.IsTLS() {
-		//	scheme = "https://"
-		//}
+		r := c.Request()
+		scheme := "http://"
+		if c.IsTLS() {
+			scheme = "https://"
+		}
+		href := scheme + r.Host + r.RequestURI
 		if util.IsWechatBrowser(c.Request().UserAgent()) {
 			//进行openid判断，如果没有则获取
 			AccessToken, _ := c.Cookie("oauth2")
@@ -93,7 +91,8 @@ func WechatFilter(next echo.HandlerFunc) echo.HandlerFunc {
 					//获取openId
 					at = oauth2.GetAccessToken(code)
 				} else {
-					//return utils.Redirect(c, util.GetAuthorizeCodeUrl(href))
+					global.Log.Warning(href)
+					return utils.Redirect(c, util.GetAuthorizeCodeUrl(href))
 				}
 			} else {
 				var at *oauth2.AccessToken

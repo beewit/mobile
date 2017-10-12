@@ -2,14 +2,19 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/beewit/beekit/utils"
-	"github.com/beewit/mobile/global"
-	"github.com/labstack/echo"
 	"io/ioutil"
+	"net/http"
+	"time"
+
+	"strings"
+
+	"github.com/beewit/beekit/utils"
 	"github.com/beewit/beekit/utils/convert"
 	"github.com/beewit/beekit/utils/enum"
-	"github.com/beewit/wechat/util"
+	"github.com/beewit/mobile/global"
 	"github.com/beewit/wechat/mp/oauth2"
+	"github.com/beewit/wechat/util"
+	"github.com/labstack/echo"
 )
 
 func readBody(c echo.Context) (map[string]string, error) {
@@ -37,9 +42,11 @@ func Filter(next echo.HandlerFunc) echo.HandlerFunc {
 			token = bm["token"]
 		}
 		if token == "" {
+			token = c.FormValue("token")
+		}
+		if token == "" {
 			return utils.AuthFail(c, "登陆信息token无效，请重新登陆")
 		}
-
 		accMapStr, err := global.RD.GetString(token)
 		if err != nil {
 			global.Log.Error(err.Error())
@@ -70,22 +77,49 @@ func Filter(next echo.HandlerFunc) echo.HandlerFunc {
 //微信检测
 func WechatFilter(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		ur := c.Request().URL
+		global.Log.Warning(ur.Hostname())
+		//scheme := "http://"
+		//if c.IsTLS() {
+		//	scheme = "https://"
+		//}
 		if util.IsWechatBrowser(c.Request().UserAgent()) {
 			//进行openid判断，如果没有则获取
-			openId, err := c.Cookie("openId")
-			if err != nil {
-				panic(err)
-			}
-			if openId.Value == "" {
+			AccessToken, _ := c.Cookie("oauth2")
+			var at *oauth2.AccessToken
+			if AccessToken == nil || AccessToken.Value == "" {
 				code := c.FormValue("code")
 				if code != "" {
 					//获取openId
-					c.Set("oauth2", oauth2.GetAccessToken(code))
+					at = oauth2.GetAccessToken(code)
 				} else {
-					return utils.Redirect(c, util.GetAuthorizeCodeUrl(c.Request().URL.RawPath))
+					//return utils.Redirect(c, util.GetAuthorizeCodeUrl(href))
+				}
+			} else {
+				var at *oauth2.AccessToken
+				err := json.Unmarshal([]byte(AccessToken.Value), &at)
+				if err != nil {
+					global.Log.Error(err.Error())
+					return utils.ErrorNull(c, "AccessToken json.Unmarshal 解析失败")
 				}
 			}
+			if at != nil {
+				SetCookie(c, "oauth2", convert.ToObjStr(at), time.Duration(12)*time.Hour)
+				c.Set("oauth2", at)
+			} else {
+				return utils.ErrorNull(c, "获取微信用户信息失败")
+			}
+		} else {
+			return utils.ErrorNull(c, "请使用微信登录")
 		}
 		return next(c)
 	}
+}
+
+func SetCookie(c echo.Context, name string, value interface{}, d time.Duration) {
+	c.SetCookie(&http.Cookie{Name: name, Value: convert.ToObjStr(value), Expires: time.Now().Add(d)})
+}
+
+func RemoveCookie(c echo.Context, name string) {
+	SetCookie(c, name, "", time.Duration(-1))
 }

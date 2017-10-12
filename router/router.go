@@ -20,7 +20,7 @@ func Start() {
 	e.Static("/app", "app")
 	e.File("/", "app/page/index.html")
 
-	e.POST("/account/bind", handler.BindAccount, handler.Filter)
+	e.GET("/account/wechatBind", handler.BindWeechatAccount, handler.WechatFilter)
 
 	utils.Open(global.Host)
 

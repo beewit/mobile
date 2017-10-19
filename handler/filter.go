@@ -18,18 +18,20 @@ import (
 func readBody(c echo.Context) (map[string]string, error) {
 	body, bErr := ioutil.ReadAll(c.Request().Body)
 	if bErr != nil {
-		global.Log.Error("读取http body失败，原因：", bErr.Error())
+		global.Log.Error("读取http body失败，原因：%s", bErr.Error())
 		return nil, bErr
 	}
 	defer c.Request().Body.Close()
-
-	var bm map[string]string
-	bErr = json.Unmarshal(body, &bm)
-	if bErr != nil {
-		global.Log.Error("解析http body失败，原因：", bErr.Error())
-		return nil, bErr
+	if body != nil && len(body) > 0 {
+		var bm map[string]string
+		bErr = json.Unmarshal(body, &bm)
+		if bErr != nil {
+			global.Log.Error("解析http body失败，原因：%s", bErr.Error())
+			return nil, bErr
+		}
+		return bm, bErr
 	}
-	return bm, bErr
+	return nil, nil
 }
 
 func Filter(next echo.HandlerFunc) echo.HandlerFunc {
@@ -57,7 +59,7 @@ func Filter(next echo.HandlerFunc) echo.HandlerFunc {
 		accMap := make(map[string]interface{})
 		err = json.Unmarshal([]byte(accMapStr), &accMap)
 		if err != nil {
-			global.Log.Error(accMapStr + "，error：" + err.Error())
+			global.Log.Error(accMapStr+"，error：%s", err.Error())
 			return utils.AuthFail(c, "登陆信息已失效，请重新登陆")
 		}
 		m, err := global.DB.Query("SELECT id,nickname,photo,mobile,status FROM account WHERE id=? LIMIT 1", accMap["id"])
@@ -83,7 +85,8 @@ func WechatFilter(next echo.HandlerFunc) echo.HandlerFunc {
 		href := scheme + r.Host + r.RequestURI
 		if util.IsWechatBrowser(c.Request().UserAgent()) {
 			//进行openid判断，如果没有则获取
-			AccessToken, _ := c.Cookie("oauth2")
+			RemoveCookie(c, "oauth2")
+			AccessToken, _ := c.Cookie("oauth23")
 			var at *oauth2.AccessToken
 			if AccessToken == nil || AccessToken.Value == "" {
 				code := c.FormValue("code")
@@ -95,6 +98,7 @@ func WechatFilter(next echo.HandlerFunc) echo.HandlerFunc {
 					return utils.Redirect(c, util.GetAuthorizeCodeUrl(href))
 				}
 			} else {
+				global.Log.Info("AccessToken:%s", AccessToken.Value)
 				var at *oauth2.AccessToken
 				err := json.Unmarshal([]byte(AccessToken.Value), &at)
 				if err != nil {
@@ -103,7 +107,8 @@ func WechatFilter(next echo.HandlerFunc) echo.HandlerFunc {
 				}
 			}
 			if at != nil {
-				SetCookie(c, "oauth2", convert.ToObjStr(at), time.Duration(12)*time.Hour)
+				global.Log.Info("AccessToken:%s", convert.ToObjStr(at))
+				SetCookie(c, "oauth2", at, time.Duration(12)*time.Hour)
 				c.Set("oauth2", at)
 			} else {
 				return utils.ErrorNull(c, "获取微信用户信息失败")
@@ -120,5 +125,5 @@ func SetCookie(c echo.Context, name string, value interface{}, d time.Duration) 
 }
 
 func RemoveCookie(c echo.Context, name string) {
-	SetCookie(c, name, "", time.Duration(-1))
+	c.SetCookie(&http.Cookie{Name: name, Value: "", Expires: time.Now().Add(-1), MaxAge: 0})
 }

@@ -54,12 +54,7 @@ func BindWeechatAccount(c echo.Context) error {
 	}
 	if len(maps) != 1 {
 		m := map[string]interface{}{}
-		iw, _ := utils.NewIdWorker(1)
-		id, idErr := iw.NextId()
-		if idErr != nil {
-			return utils.Alert(c, "ID生成器发生错误")
-		}
-		m["id"] = id
+		m["id"] = utils.ID()
 		m["nickname"] = u.Nickname
 		m["photo"] = u.Headimgurl
 		m["openid"] = u.Openid

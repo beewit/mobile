@@ -1,6 +1,7 @@
 package global
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"github.com/beewit/beekit/conf"
@@ -8,17 +9,24 @@ import (
 	"github.com/beewit/beekit/mysql"
 	"github.com/beewit/beekit/redis"
 	"github.com/beewit/beekit/utils/convert"
-	"encoding/json"
+	"github.com/beewit/wechat/mp"
+	"github.com/beewit/wechat/mp/account"
+	"strings"
 )
 
 var (
-	CFG  conf.Config
-	DB   *mysql.SqlConnPool
-	RD   *redis.RedisConnPool
-	Log  *logs.BeeLogger
-	IP   string
-	Port string
-	Host string
+	CFG               conf.Config
+	DB                *mysql.SqlConnPool
+	RD                *redis.RedisConnPool
+	Log               *logs.BeeLogger
+	IP                string
+	Port              string
+	Host              string
+	WechatConf        *wechatConf
+	FileConf          *fileConf
+	AccessTokenServer *mp.DefaultAccessTokenServer
+	MPClient          *mp.Client
+	AccClient         *account.Client
 )
 
 func init() {
@@ -29,6 +37,20 @@ func init() {
 	IP = convert.ToString(CFG.Get("server.ip"))
 	Port = convert.ToString(CFG.Get("server.port"))
 	Host = fmt.Sprintf("http://%v:%v", IP, Port)
+	WechatConf = &wechatConf{
+		OriId:     convert.ToString(CFG.Get("wechat.oriId")),
+		AppID:     convert.ToString(CFG.Get("wechat.appId")),
+		AppSecret: convert.ToString(CFG.Get("wechat.appSecret")),
+		MchID:     convert.ToString(CFG.Get("wechat.mchID")),
+		APIKey:    convert.ToString(CFG.Get("wechat.apiKey")),
+	}
+	FileConf = &fileConf{
+		Path:   convert.ToString(CFG.Get("files.path")),
+		DoMain: convert.ToString(CFG.Get("files.doMain")),
+	}
+	AccessTokenServer = mp.NewDefaultAccessTokenServer(WechatConf.AppID, WechatConf.AppSecret, nil)
+	MPClient = mp.NewClient(AccessTokenServer, nil)
+	AccClient = account.NewClient(AccessTokenServer, nil)
 }
 
 type Account struct {
@@ -63,4 +85,26 @@ func ToInterfaceAccount(m interface{}) *Account {
 		return nil
 	}
 	return ToByteAccount(b)
+}
+
+type wechatConf struct {
+	OriId          string
+	AppID          string
+	MchID          string
+	AppSecret      string
+	APIKey         string
+	EncodingAESKey string
+}
+
+type fileConf struct {
+	Path   string
+	DoMain string
+}
+
+func GetSavePath(path string) string {
+	return strings.Replace(path, "/home/zxb/file/", "", -1)
+}
+
+func GetUrlByFilePath(path string) string {
+	return FileConf.DoMain + GetSavePath(path)
 }

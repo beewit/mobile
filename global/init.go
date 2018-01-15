@@ -23,6 +23,7 @@ var (
 	Port              string
 	Host              string
 	WechatConf        *wechatConf
+	WechatMiniAppConf *wechatMiniAppConf
 	FileConf          *fileConf
 	AccessTokenServer *mp.DefaultAccessTokenServer
 	MPClient          *mp.Client
@@ -44,6 +45,12 @@ func init() {
 		MchID:     convert.ToString(CFG.Get("wechat.mchID")),
 		APIKey:    convert.ToString(CFG.Get("wechat.apiKey")),
 	}
+
+	WechatMiniAppConf = &wechatMiniAppConf{
+		AppID:     convert.ToString(CFG.Get("wechat_mini_app.appId")),
+		AppSecret: convert.ToString(CFG.Get("wechat_mini_app.appSecret")),
+	}
+
 	FileConf = &fileConf{
 		Path:   convert.ToString(CFG.Get("files.path")),
 		DoMain: convert.ToString(CFG.Get("files.doMain")),
@@ -94,6 +101,11 @@ type wechatConf struct {
 	AppSecret      string
 	APIKey         string
 	EncodingAESKey string
+}
+
+type wechatMiniAppConf struct {
+	AppID     string
+	AppSecret string
 }
 
 type fileConf struct {

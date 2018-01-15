@@ -1,0 +1,17 @@
+{
+    "files.autoSave": "onFocusChange",
+    "go.buildOnSave": true,
+    "go.lintOnSave": true,
+    "go.vetOnSave": true,
+    "go.buildTags": "",
+    "go.buildFlags": [],
+    "go.lintFlags": [],
+    "go.vetFlags": [],
+    "go.coverOnSave": false,
+    "go.useCodeSnippetsOnFunctionSuggest": false,
+    "go.formatOnSave": true,
+    "go.formatTool": "gofmt",
+    "go.goroot": "C:\\go",
+    "go.gopath": "D:\\goworks",
+    "go.gocodeAutoBuild": true
+}

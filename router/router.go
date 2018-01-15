@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+
 	"github.com/beewit/beekit/utils"
 	"github.com/beewit/beekit/utils/convert"
 	"github.com/beewit/mobile/global"
@@ -33,12 +34,18 @@ func Start() {
 
 	e.Static("/app", "app")
 	e.File("/", "app/page/index.html")
+	e.File("/.well-known/pki-validation/fileauth.txt", "fileauth.txt")
 	//微信域名接口校验文件
 	e.File("MP_verify_3Z6AKFClzM8nQt3q.txt", "app/page/MP_verify_3Z6AKFClzM8nQt3q.txt")
 	e.GET("/account/wechatBind", handler.BindWeechatAccount, handler.Filter, handler.WechatFilter)
-	e.GET("/account/create/temporary/qrcode", handler.CreateTemporaryQRCode)
 	e.GET("/wechat/server", mpServerFrontend.ServeHTTP)
 	e.POST("/wechat/server", mpServerFrontend.ServeHTTP)
+
+	//临时二维码
+
+	e.POST("/account/create/temporary/qrcode", handler.CreateTemporaryQRCode)
+	//永久二维码
+	e.POST("/account/create/permanent/qrcode", handler.CreatePermanentQRCode)
 
 	utils.Open(global.Host)
 

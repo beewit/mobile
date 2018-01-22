@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+
 	"github.com/beewit/beekit/utils"
 	"github.com/beewit/beekit/utils/convert"
 	"github.com/beewit/beekit/utils/enum"
@@ -58,6 +59,20 @@ func CreateTemporaryQRCode(c echo.Context) error {
 	return utils.ErrorNull(c, "创建临时二维码失败")
 }
 
+func CreateTemporarySceneStrQrCode(c echo.Context) error {
+	objId := c.FormValue("objId")
+	objType := c.FormValue("objType")
+	qrCode, err := global.AccClient.CreateTemporaryQRCodeSceneStr(objId+"|"+objType, account.TemporaryQRCodeExpireSecondsLimit)
+	if err != nil {
+		global.Log.Error("创建临时二维码失败，ERROR：", err.Error())
+		return utils.ErrorNull(c, "创建临时二维码失败")
+	}
+	if qrCode != nil {
+		return download(c, qrCode.Ticket, 0)
+	}
+	return utils.ErrorNull(c, "创建临时二维码失败")
+}
+
 /* func CreatePermanentQRCodeWithSceneString(c echo.Context) error {
 	objId := c.FormValue("objId")
 	objType := c.FormValue("objType")
@@ -80,7 +95,7 @@ func download(c echo.Context, ticket string, id int64) error {
 	fileName := utils.ID()
 	//filePath := fmt.Sprintf("%s%d/%d.jpg", global.FileConf.Path, acc.ID, utils.ID())
 
-	filePath := fmt.Sprintf("%sqrcode/%s/%d.jpg", global.FileConf.Path, utils.CurrentDateByPlace("/"), utils.ID())
+	filePath := fmt.Sprintf("%sqrcode/%s/%d.jpg", global.FileConf.Path, utils.CurrentDateByPlace("/"), fileName)
 	written, err := global.AccClient.QRCodeDownload(ticket, filePath)
 	if err != nil {
 		global.Log.Error("下载临时二维码失败，ERROR：", err.Error())
@@ -102,10 +117,12 @@ func download(c echo.Context, ticket string, id int64) error {
 		if err != nil {
 			global.Log.Error(fmt.Sprintf("保存文件日志失败，ERROR：%s", err.Error()))
 		}
-		//更新path
-		_, err = global.DB.Update("UPDATE qrcode SET path=? WHERE id=?", path, id)
-		if err != nil {
-			global.Log.Error(fmt.Sprintf("保存二维码存储路径记录失败，ERROR：%s", err.Error()))
+		if id > 0 {
+			//更新path
+			_, err = global.DB.Update("UPDATE qrcode SET path=? WHERE id=?", path, id)
+			if err != nil {
+				global.Log.Error(fmt.Sprintf("保存二维码存储路径记录失败，ERROR：%s", err.Error()))
+			}
 		}
 	}()
 	return utils.SuccessNullMsg(c, map[string]interface{}{

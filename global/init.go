@@ -52,8 +52,9 @@ func init() {
 	}
 
 	FileConf = &fileConf{
-		Path:   convert.ToString(CFG.Get("files.path")),
-		DoMain: convert.ToString(CFG.Get("files.doMain")),
+		BasePath: convert.ToString(CFG.Get("files.basePath")),
+		Path:     convert.ToString(CFG.Get("files.path")),
+		DoMain:   convert.ToString(CFG.Get("files.doMain")),
 	}
 	AccessTokenServer = mp.NewDefaultAccessTokenServer(WechatConf.AppID, WechatConf.AppSecret, nil)
 	MPClient = mp.NewClient(AccessTokenServer, nil)
@@ -109,12 +110,13 @@ type wechatMiniAppConf struct {
 }
 
 type fileConf struct {
-	Path   string
-	DoMain string
+	BasePath string
+	Path     string
+	DoMain   string
 }
 
 func GetSavePath(path string) string {
-	return strings.Replace(path, "/home/zxb/file/", "", -1)
+	return strings.Replace(path, FileConf.BasePath, "", -1)
 }
 
 func GetUrlByFilePath(path string) string {

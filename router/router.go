@@ -22,6 +22,7 @@ func Start() {
 	messageServeMux := mp.NewMessageServeMux()
 	messageServeMux.MessageHandleFunc(request.MsgTypeText, handler.TextMessageHandler)
 	messageServeMux.EventHandleFunc(request.EventTypeSubscribe, handler.SubscribeHandler)
+	messageServeMux.EventHandleFunc(request.EventTypeScan, handler.ScanHandler)
 	// 下面函数的几个参数设置成你自己的参数: oriId, token, appId
 	mpServer := mp.NewDefaultServer(global.WechatConf.OriId, "9ee3ew5w4QGY0aAXr6nF", global.WechatConf.AppID, aesKey, messageServeMux)
 	mpServerFrontend := mp.NewServerFrontend(mpServer, mp.ErrorHandlerFunc(handler.ErrorHandler), nil)
@@ -42,10 +43,9 @@ func Start() {
 	e.POST("/wechat/server", mpServerFrontend.ServeHTTP)
 
 	//临时二维码
-
-	e.POST("/account/create/temporary/qrcode", handler.CreateTemporaryQRCode)
+	e.POST("/account/create/temporary/qrcode", handler.CreateTemporarySceneStrQrCode)
 	//永久二维码
-	e.POST("/account/create/permanent/qrcode", handler.CreatePermanentQRCode)
+	//e.POST("/account/create/permanent/qrcode", handler.CreatePermanentQRCode)
 
 	utils.Open(global.Host)
 

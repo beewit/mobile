@@ -9,22 +9,22 @@ import (
 	"github.com/beewit/mobile/handler"
 	"github.com/beewit/wechat/mp"
 	"github.com/beewit/wechat/mp/message/request"
-	"github.com/beewit/wechat/util"
+	//"github.com/beewit/wechat/util"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
 func Start() {
-	aesKey, err := util.AESKeyDecode("38VL2RYTRbuh2t0bGDsJj6XNBDXYhYUz4bLRJVne8iY")
+	/*aesKey, err := util.AESKeyDecode("38VL2RYTRbuh2t0bGDsJj6XNBDXYhYUz4bLRJVne8iY")
 	if err != nil {
 		panic(err)
-	}
+	}*/
 	messageServeMux := mp.NewMessageServeMux()
 	messageServeMux.MessageHandleFunc(request.MsgTypeText, handler.TextMessageHandler)
 	messageServeMux.EventHandleFunc(request.EventTypeSubscribe, handler.SubscribeHandler)
 	messageServeMux.EventHandleFunc(request.EventTypeScan, handler.ScanHandler)
 	// 下面函数的几个参数设置成你自己的参数: oriId, token, appId
-	mpServer := mp.NewDefaultServer(global.WechatConf.OriId, "9ee3ew5w4QGY0aAXr6nF", global.WechatConf.AppID, aesKey, messageServeMux)
+	mpServer := mp.NewDefaultServer(global.WechatConf.OriId, "9ee3ew5w4QGY0aAXr6nF", global.WechatConf.AppID, nil, messageServeMux)
 	mpServerFrontend := mp.NewServerFrontend(mpServer, mp.ErrorHandlerFunc(handler.ErrorHandler), nil)
 
 	fmt.Printf("手机站点启动..")

@@ -2,8 +2,10 @@ package handler
 
 import (
 	"fmt"
+	"github.com/beewit/wechat/mp/message"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/beewit/beekit/mysql"
 	"github.com/beewit/beekit/utils"
@@ -25,23 +27,31 @@ func ErrorHandler(w http.ResponseWriter, r *http.Request, err error) {
 // 文本消息的 Handler
 func TextMessageHandler(w http.ResponseWriter, r *mp.Request) {
 	// 简单起见，把用户发送过来的文本原样回复过去
+	start := time.Now()
 	text := request.GetText(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	resp := response.NewText(text.FromUserName, text.ToUserName, text.CreateTime, text.Content)
+	if text.Content == "提现老板现金红包余额不足" {
+		sendTemplateMessage()
+	}
 	mp.WriteRawResponse(w, r, resp)
+	global.Log.Info("TextMessageHandler 耗时：%v", time.Since(start))
 }
 
 // 已关注扫码事件 Handler
 func ScanHandler(w http.ResponseWriter, r *mp.Request) {
+	start := time.Now()
 	// 简单起见，把用户发送过来的文本原样回复过去
 	event := request.GetScanEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	global.Log.Info("%s %s %s %s", event.FromUserName, event.ToUserName, event.EventKey, event.Event)
 	tip := sendRedPacket(event.EventKey, event.FromUserName, r)
 	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, tip)
 	mp.WriteRawResponse(w, r, resp)
+	global.Log.Info("ScanHandler 耗时：%v", time.Since(start))
 }
 
 // 扫码关注事件 Handler
 func SubscribeHandler(w http.ResponseWriter, r *mp.Request) {
+	start := time.Now()
 	// 简单起见，把用户发送过来的文本原样回复过去
 	event := request.GetScanEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	//event.FromUserName
@@ -49,6 +59,7 @@ func SubscribeHandler(w http.ResponseWriter, r *mp.Request) {
 	tip := sendRedPacket(event.EventKey, event.FromUserName, r)
 	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, tip)
 	mp.WriteRawResponse(w, r, resp)
+	global.Log.Info("SubscribeHandler 耗时：%v", time.Since(start))
 }
 
 func sendRedPacket(eventKey, openId string, r *mp.Request) string {
@@ -162,10 +173,12 @@ func sendRedPacket(eventKey, openId string, r *mp.Request) string {
 						})
 						if flog {
 							//发送红包
-							if sendMoneyHandle(openId, billno, convert.MustInt(receiveMoney*100), convert.ToString(receiveRedPacket["blessings"]), convert.ToString(receiveRedPacket["send_name"]), convert.ToString(receiveRedPacket["remarks"])) {
+							sendFlog, errTip := sendMoneyHandle(openId, billno, convert.MustInt(receiveMoney*100), convert.ToString(receiveRedPacket["blessings"]), convert.ToString(receiveRedPacket["send_name"]), convert.ToString(receiveRedPacket["remarks"]))
+							if sendFlog {
 								return fmt.Sprintf("已发送红包%.2f元，请点击领取到您的零钱", receiveMoney)
 							} else {
-								return "发送红包失败请稍后重试"
+								//这里将修改发送失败记录
+								return errTip
 							}
 						} else {
 							//领取红包失败
@@ -185,12 +198,12 @@ func sendRedPacket(eventKey, openId string, r *mp.Request) string {
 	return "你好！欢迎关注工蜂小智"
 }
 
-func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, act_name, remark string) bool {
+func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, act_name, remark string) (bool, string) {
 	//查询红包来源，判断是否有领红包可能
 	client, err := mp.NewTLSHttpClient("/home/zxb/cert/apiclient_cert.pem", "/home/zxb/cert/apiclient_key.pem")
 	if err != nil {
 		global.Log.Error("NewTLSHttpClient ERROR：%s", err.Error())
-		return false
+		return false, "发放红包失败"
 	} else {
 		proxy := mp.NewProxy(global.WechatConf.AppID, global.WechatConf.MchID, global.WechatConf.APIKey, client)
 		req := map[string]string{}
@@ -232,8 +245,9 @@ func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, act_
 		packResp, err := mmpaymkttransfers.SendRedPack(proxy, req)
 		//成功返回并没有签名
 		if err != nil && !strings.Contains(err.Error(), "no sign parameter") {
+			AddSysLog(fmt.Sprintf("发送红包失败，参数:%s", convert.ToString(req)), "ERROR", convert.ToString(packResp), "")
 			global.Log.Error("发送红包失败，ERROR：%s", err.Error())
-			return false
+			return false, getErrMsg(convert.ToString(packResp["err_code"]))
 		} else {
 			var balanceTip string
 			if packResp["return_code"] == mp.ReturnCodeSuccess {
@@ -241,7 +255,7 @@ func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, act_
 					//发送红包成功，进行扣款
 					global.Log.Info("发送红包成功，进行扣款")
 					AddSysLog(fmt.Sprintf("发送红包成功，参数:%s", convert.ToString(req)), "INFO", convert.ToString(packResp), "")
-					return true
+					return true, ""
 				} else {
 					global.Log.Error("发送红包失败 result_code:%s ， err_code：%s ， err_code_des：%s", packResp["result_code"], packResp["err_code"], packResp["err_code_des"])
 					if packResp["err_code"] == "NOTENOUGH" {
@@ -254,9 +268,51 @@ func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, act_
 				global.Log.Error("发送红包失败 return_code:%s ， return_msg：%s", packResp["return_code"], packResp["return_msg"])
 			}
 			AddSysLog(fmt.Sprintf("%s - 发送红包失败，参数:%s", balanceTip, convert.ToString(req)), "ERROR", convert.ToString(packResp), "")
-			return false
+			return false, getErrMsg(convert.ToString(packResp["err_code"]))
 		}
 	}
+}
+
+func getErrMsg(errCode string) string {
+	switch errCode {
+	case "NO_AUTH":
+		return "您的账号异常，已被微信拦截"
+	case "SENDNUM_LIMIT":
+		return "您今日领取红包个数超过限制"
+	case "MONEY_LIMIT":
+		return "超出红包金额发放限制"
+	case "FREQ_LIMIT":
+		return "超过频率限制,请稍后再试"
+	case "NOTENOUGH":
+		//通知平台商户余额不足，请充值
+		sendTemplateMessage()
+	}
+	return "发放红包失败"
+}
+
+func sendTemplateMessage() {
+	go func() {
+		var tm message.TemplateMessage
+		tm.ToUser = "oRDhB0y0UAAnyebgBgaDSQkivZjk"
+		tm.TemplateId = "Wb1J0vXwsOL_ROnGxXkm0BtIzNwbXsdsf5tB9sD1DS4"
+		tm.Data = map[string]interface{}{
+			"first":    "亲爱的老板，现金红包的账户余额不足，希望您尽快充值!",
+			"keyword1": map[string]string{"value": "微信商户平台账号"},
+			"keyword2": map[string]string{"value": "我不知道"},
+			"remark":   "工蜂引流 - 红包助手",
+		}
+		token, err := global.AccClient.Token()
+		if err != nil {
+			global.Log.Error("token获取失败：%s", err.Error())
+			return
+		}
+		msgId, err := message.Send(tm, token)
+		if err != nil {
+			println("error:", err.Error())
+		} else {
+			println(msgId)
+		}
+	}()
 }
 
 func AddSysLog(title, t, content, ip string) {

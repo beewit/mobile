@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>清理工具</title>
+    <script src="/app/js/js.cookie_21e2add.js"></script>
+</head>
+<body>
+<script>
+    document.write("开始清理")
+    document.write("待清理oauth2：")
+    document.write(Cookies.get("oauth2"))
+    Cookies.remove("oauth2")
+    document.write("开始结果：")
+    document.write(Cookies.get("oauth2"))
+</script>
+</body>
+</html>

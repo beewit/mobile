@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>我的</title>
+    <meta name="description" content="工蜂引流红包裂变">
+    <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/red_packet/css/app.css" rel="stylesheet"/>
+    <link href="/red_packet/css/view/user/home.css" rel="stylesheet"/>
+    <script src="/red_packet/js/jquery.min.js"></script>
+    <script src="/red_packet/js/layer/layer.js"></script>
+    <script src="/red_packet/js/common.js"></script>
+    <script src="/red_packet/js/vue.min.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <script>
+        document.write(common.loader)
+    </script>
+<div v-cloak>
+    <vheader v-bind:nav='nav'></vheader>
+    <vnav></vnav>
+<div class="container">
+    <a class="navigator" href="/red_packet/pages/user/account/bind.html" style='width:100%;'>
+        <div class='container-head'>
+            <div class="userinfo mb-20">
+                <img bindtap="bindViewTap" class="userinfo-avatar" :src="Account.photo" background-size="cover"></image>
+                <div class="userinfo-nickname">{{Account.nickname}}
+                    <i class='iconfont icon-yirenzheng' hidden='{{expireComponyFunc}}'></i>
+                </div>
+            </div>
+        </div>
+    </a>
+<div class='ul'>
+<div class='li'>
+<a class="navigator" href="/red_packet/pages/user/open/func.html">
+<div class='li-content'>
+<div class='title text-orange'>
+    <i class='iconfont icon-vip'></i>{{expireComponyFunc?"开通":"续费"}}企业版</div>
+    <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+</div>
+</a>
+</div>
+    <div class='li'>
+        <a class="navigator" href="/red_packet/pages/user/company/auth.html">
+            <div class='li-content'>
+                <div class='title text-blue'>
+                    <i class='iconfont icon-3qiyezhengxin83a638'></i>企业认证
+                </div>
+                <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+            </div>
+        </a>
+    </div>
+    <div class='li'>
+        <a class="navigator" href="/red_packet/pages/user/card/index.html">
+            <div class='li-content'>
+                <div class='title'>
+                    <i class='iconfont icon-jiankangqia'></i>红包卡片
+                </div>
+                <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+            </div>
+        </a>
+    </div>
+    <div class='li-line'></div>
+    <div class='li'>
+        <a class="navigator" href="/red_packet/pages/user/account/bind.html">
+            <div class='li-content'>
+                <div class='title'>
+                    <i class='iconfont icon-qiehuanzhanghao'></i>绑定账号
+                </div>
+                <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+            </div>
+        </a>
+    </div>
+    <div class='li'>
+        <a class="navigator" href="/red_packet/pages/user/coupon/index.html">
+            <div class='li-content'>
+                <div class='title'>
+                    <i class='iconfont icon-tubiaolunkuo-'></i>我的代金券
+                </div>
+                <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+            </div>
+        </a>
+    </div>
+
+    <!-- <div class='li'>
+          <a class='navigator' url='/red_packet/pages/user/receive/index'>
+            <div class='li-content'>
+              <div class='title'>我的红包</div>
+              <image class='icon-right' src='/static/red_packet/img/icon/right.png'></image>
+            </div>
+          </a>
+        </div> -->
+
+    <div class='li-line'></div>
+    <div class='li'>
+        <a class='navigator' href='/red_packet/pages/user/send_out/coupon.html'>
+            <div class='li-content'>
+                <div class='title'>
+                    <i class='iconfont icon-kaifashili'></i>发出的代金券
+                </div>
+                <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+            </div>
+        </a>
+    </div>
+    <div class='li'>
+        <a class='navigator' href='/red_packet/pages/user/send_out/red_packet.html'>
+            <div class='li-content'>
+                <div class='title'>
+                    <i class='iconfont icon-hongbao1'></i>发出的红包
+                </div>
+                <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+            </div>
+        </a>
+    </div>
+
+    <div class='li-line'></div>
+    <div class='li' bindtap='scanCoupon'>
+        <div class='li-content'>
+            <div class='title'>
+                <i class='iconfont icon-saoyisao'></i>扫代金券码
+            </div>
+            <i class="icon iconfont icon-youjiantou-01 icon-right"></i>
+        </div>
+    </div>
+
+    <div class='li-line'></div>
+    <div class='li' v-on:click='logOut'>
+        <div class='li-content'>
+            <div class='title' style='color:red;'>
+                <i class='iconfont icon-qingchu' style='color:red;'></i>清除缓存
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+    <vfooter></vfooter>
+</div>
+</div>
+<script src="/red_packet/js/app.js"></script>
+<script src="/red_packet/js/view/user/home.js"></script>
+</body>
+
+</html>

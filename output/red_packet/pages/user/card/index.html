@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		    <meta http-equiv="Expires" content="0">    <meta http-equiv="Pragma" content="no-cache">    <meta http-equiv="Cache-control" content="no-cache">    <meta http-equiv="Cache" content="no-cache">
+		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<meta http-equiv="x-dns-prefetch-control" content="on">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="renderer" content="webkit">
+		<title>我的</title>
+		<meta name="description" content="工蜂引流红包裂变">
+		<link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="/red_packet/css/app_a2a91f6.css" rel="stylesheet" />
+		<link href="/red_packet/css/view/user/card/index_7b51476.css" rel="stylesheet" />
+		<script src="/red_packet/js/jquery.min_b98e32a.js"></script>
+		<script src="/red_packet/js/layer/layer_59328fc.js"></script>
+		<script src="/red_packet/js/common_c5b9a1d.js"></script>
+		<script src="/red_packet/js/vue.min_6d07515.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+			<script>
+				document.write(common.loader)
+			</script>
+			<div v-cloak>
+				<vheader v-bind:nav='nav'></vheader>
+				<vnav></vnav>
+
+				<a open-type='navigate' url='/red_packet/pages/user/account/account.html' hidden='{{isLoginAccount}}'>
+					<div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
+				</a>
+				<div class='m'>
+					<a class="navigator" href="/red_packet/pages/user/card/edit.html">
+						<button class='text-gray' class='addCardBtn'> 新建红包卡片 </button>
+					</a>
+				</div>
+
+				<div id='content'>
+					<div class='m'>
+						<div class='card-list'>
+							<div v-if="List.Count<=0">
+								<div class='text-tip'>官方示例：</div>
+								<div class='card-item'>
+									<div class='card-name'>工蜂引流APP</div>
+									<div class='card-contact'>自动抢占流量入口，1天可达10万人。</div>
+									<div class='card-tel'>官网：www.9ee3.com</div>
+									<div class='card-address'></div>
+									<div class='card-defalut active'>默</div>
+								</div>
+							</div>
+							<div v-for="(item,index) in List.Data">
+								<div class='card-item' bindtap='selectCard' data-id='{{item.id}}' data-name='{{item.name}}'>
+									<div class='card-name'>{{item.name}}</div>
+									<div class='card-contact'>{{item.contact}}</div>
+									<div class='card-tel'>{{item.tel}}</div>
+									<div class='card-address'>{{item.address}}</div>
+									<div class='card-defalut {{item.def=="1"?"active":""}}'>默</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<vfooter></vfooter>
+				</div>
+			</div>
+		</div>
+		<script src="/red_packet/js/app_5d1fdf5.js"></script>
+		<script src="/red_packet/js/view/user/card/index_4b5e6c8.js"></script>
+	</body>
+
+</html>

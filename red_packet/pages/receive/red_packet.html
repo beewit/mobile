@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>发出的代金券</title>
+    <meta name="description" content="工蜂引流红包裂变">
+    <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/red_packet/css/app.css" rel="stylesheet"/>
+    <link href="/red_packet/css/view/receive/red_packet.css" rel="stylesheet"/>
+    <script src="/red_packet/js/jquery.min.js"></script>
+    <script src="/red_packet/js/layer/layer.js"></script>
+    <script src="/red_packet/js/common.js"></script>
+    <script src="/red_packet/js/vue.min.js"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <script>
+        document.write(common.loader)
+    </script>
+    <div v-cloak>
+        <vheader v-bind:nav='nav'></vheader>
+        <vnav></vnav>
+        <div class="container">
+            <div class='container-head'>
+                <div class="userinfo">
+                    <image bindtap="bindViewTap" class="userinfo-avatar" :src="redPacket.send_photo"
+                           background-size="cover"></image>
+                    <lable class="userinfo-nickname">{{redPacket.send_name}}</lable>
+                </div>
+                <div class="usermotto">
+                    <image class="icon icon-horn" src="/red_packet/img/icon/horn.png" background-size="cover"></image>
+                    <lable class="user-motto">{{redPacket.blessings}}</lable>
+                </div>
+                <div class='line-group mt-20'>
+                    <div class='btn btn-write' v-on:click='receiveRedPacketTap'>
+                        领取现金红包
+                    </div>
+                    <div class='btn btn-orange' v-if='redPacket.join_coupon_ids!=""' v-on:click='receiveCoupon'>领取现金券
+                    </div>
+                </div>
+                <div class='line-group mtb-20'>
+                    <a href='/red_packet/pages/user/send/red_packet.html'>
+                        <div class='text-15 line-40 handler-item'>
+                            <img class="icon icon-red_packet" src="/red_packet/img/icon/red_packet.png"
+                                 background-size="cover"/>发红包
+                        </div>
+                    </a>
+                    <div class='text-15 line-40 handler-item'>
+                        <img class="icon icon-red_packet" src="/red_packet/img/icon/share.png" background-size="cover"/>
+                        去分享
+                    </div>
+                    <div class='text-15 line-40 gray handler-item'>
+                        <img class="icon icon-red_packet" src="/red_packet/img/icon/complain.png"
+                             background-size="cover"/>投诉
+                    </div>
+                </div>
+            </div>
+            <div class='container-list'>
+                <div class='text-tip'>
+                    <lable class='text-small'>红包已领取：{{recredPacketNum}}个</lable>
+                    <lable class='text-small' v-if='redPacket.join_coupon_ids!=""'>现金券已领取：{{recredCouponNum}}个</lable>
+                </div>
+                <div class='list'>
+                    <div class='fl' :class='redPacket.join_coupon_ids!=""?"":"w100"'>
+                        <div class='vertical_line' v-if='redPacket.join_coupon_ids!=""'></div>
+                        <block v-if="redPacketList.length>0">
+                            <div v-for='(item,index) in redPacketList' class='list-item'>
+                                <div class='list-item-pos' :class='redPacket.join_coupon_ids!=""?"":"w100"'>
+                                    <image bindtap="bindViewTap" class="list-item-head" :src="item.avatar_url"
+                                           background-size="cover"></image>
+                                    <lable class='text-small nickname'>{{item.nickname}}</lable>
+                                    <lable class='text-small right money'>{{item.money}} 元</lable>
+                                    <lable class='text-small right time'>{{item.ut_time}}</lable>
+                                </div>
+                            </div>
+                        </block>
+                        <block wx:else>
+                            <div class='center list-item'>
+                                <lable class='text-small text-tip '>暂时没人领取现金红包</lable>
+                            </div>
+                        </block>
+                    </div>
+                    <div class='fr' v-if='redPacket.join_coupon_ids!=""'>
+                        <block v-if="couponList.length>0">
+                            <div v-for='(item,index) in couponList' class='list-item'>
+                                <div class='list-item-pos'>
+                                    <img :src="item.avatar_url" v-on:click="bindViewTap(item.avatar_url)"
+                                         class="list-item-head" background-size="cover"/>
+                                    <lable class='text-small nickname'>{{item.nickname}}</lable>
+                                    <lable class='text-small right money'>{{item.money}} 元</lable>
+                                    <lable class='text-small right time'>{{item.ut_time}}</lable>
+                                </div>
+                            </div>
+                        </block>
+                        <block v-else>
+                            <div class='center list-item'>
+                                <lable class='text-small text-tip'>暂时没人领取现金券</lable>
+                            </div>
+                        </block>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <vfooter></vfooter>
+    </div>
+</div>
+<script src="/red_packet/js/app.js"></script>
+<script src="/red_packet/js/view/receive/red_packet.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+@import url("/red_packet/css/view/user/coupon/index.css");
+.red_packet_record {
+	padding: 30px 0;
+	background-color: #f9f9f9;
+	overflow: hidden;
+}
+
+.money-tip {
+	font-size: 11pt;
+	color: #888;
+	line-height: 40px;
+}
+
+.money {
+	font-weight: bold;
+	font-size: 20pt;
+}
+
+.coupon-body {
+	background-color: #f9f9f9;
+}
+
+.coupon-handle {
+	padding-top: 0;
+}
+
+.coupon-handle .show {
+	padding: 5px 15px;
+}

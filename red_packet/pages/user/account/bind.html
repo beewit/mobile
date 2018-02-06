@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>我的</title>
+    <meta name="description" content="工蜂引流红包裂变">
+    <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/red_packet/css/app.css" rel="stylesheet"/>
+    <link href="/red_packet/css/view/user/account/bind.css" rel="stylesheet"/>
+    <script src="/red_packet/js/jquery.min.js"></script>
+    <script src="/red_packet/js/layer/layer.js"></script>
+    <script src="/red_packet/js/vue.min.js"></script>
+    <script src="/red_packet/js/app.js"></script>
+    <script src="/red_packet/js/common.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <script>
+        document.write(common.loader)
+    </script>
+    <div v-cloak>
+        <vheader v-bind:nav='nav'></vheader>
+        <vnav></vnav>
+        <form class='form-view' @submit.prevent="submit">
+            <div v-if='!isLoginAccount'>
+                <div class="section">
+                    <input class='form-control' placeholder="输入手机号码" type='number' name='mobile' v-model='model.mobile'
+                           maxlength='11' v-on:keyup='mobileInput'>
+                </div>
+                <div v-if='inputPwd' class="section">
+                    <input class='form-control' placeholder="设置登录密码" type='text' name='pwd' password='true'
+                           maxlength='30' v-model='model.pwd'
+                    />
+                </div>
+                <div class="section">
+                    <input class='form-control' placeholder="图形验证码" maxlength='30' name='code' v-model='model.code'/>
+                    <image class="img-code" :src='ImgCodeUrl' mode="widthFix" v-on:click='tapImgCode'></image>
+                </div>
+                <div class="section">
+                    <input class='form-control' placeholder="短信验证码" maxlength='6' name='smsCode'
+                           v-model='model.smsCode'/>
+                    <button class='form-control sms-code' type='button' v-bind:disabled='mobileCodeBtn'
+                            v-on:click='sendSMSCode'>{{mobileCode}}</button>
+                </div>
+                <br>
+                <div class='center mtb'>
+                    <div class='text-tip text-small'>此账号可以登录工蜂引流APP，官网：WWW.9EE3.COM</div>
+                </div>
+                <div class='mtb'>
+                    <button class='btn-save'> 绑定账号</button>
+                </div>
+            </div>
+            <div v-else class='user-show'>
+                <div class="center">
+                    <div class="userinfo mb-20">
+                        <img bindtap="bindViewTap" class="userinfo-avatar" :src="Account.photo" background-size="cover">
+                        <div class="userinfo-nickname">{{Account.nickname}}</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class='form-title'>ID</div>
+                    <div class='form-control form-control-text'>
+                    {{Account.id}}
+                    </div>
+                </div>
+                <div class="section">
+                    <div class='form-title'>手机</div>
+                    <div class='form-control form-control-text'>
+                    {{Account.mobile}}
+                    </div>
+                </div>
+                <div class='mtb'>
+                    <button type="success" class='btn-save btn-success' disabled='true'> 已绑定账号</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <vfooter></vfooter>
+</div>
+</div>
+<script src="/red_packet/js/view/user/account/bind.js"></script>
+</body>
+
+</html>

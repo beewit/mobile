@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		    <meta http-equiv="Expires" content="0">    <meta http-equiv="Pragma" content="no-cache">    <meta http-equiv="Cache-control" content="no-cache">    <meta http-equiv="Cache" content="no-cache">
+		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<meta http-equiv="x-dns-prefetch-control" content="on">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="renderer" content="webkit">
+		<title>我的</title>
+		<meta name="description" content="工蜂引流红包裂变">
+		<link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="/red_packet/css/app_a2a91f6.css" rel="stylesheet" />
+		<link href="/red_packet/css/view/user/company/auth_178bdcf.css" rel="stylesheet" />
+		<script src="/red_packet/js/jquery.min_b98e32a.js"></script>
+		<script src="/red_packet/js/layer/layer_59328fc.js"></script>
+		<script src="/red_packet/js/common_c5b9a1d.js"></script>
+		<script src="/red_packet/js/vue.min_6d07515.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+			<script>
+				document.write(common.loader)
+			</script>
+			<div v-cloak>
+				<vheader v-bind:nav='nav'></vheader>
+				<vnav></vnav>
+				<a url='/red_packet/pages/user/account/account' hidden='{{isLoginAccount}}'>
+					<div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
+				</a>
+				<div class='status top-tip {{Data.status=="审核中"?"in":Data.status=="审核通过"?"success":""}}' :class="statusCls" hidden='{{!Data}}'>{{Data.status}}</div>
+				<div class="container">
+					<form class='form-view' @submit.prevent="submit">
+						<div>
+							<div class="section">
+								<div class='form-title'>企业名称</div>
+								<input name='name' class='form-control' placeholder="企业名称" maxlength='30' v-model='Data.name' bindinput='nameInput' v-bind:disabled='btnText=="审核中" || btnText=="审核通过"' />
+							</div>
+							<div class="section">
+								<div class='form-title'>企业法人</div>
+								<input name='legal_person' class='form-control' placeholder="企业法人" maxlength='20' v-model='Data.legal_person' bindinput='legalPersonInput' v-bind:disabled='btnText=="审核中" || btnText=="审核通过"' />
+							</div>
+							<div class="section">
+								<div class='form-title'>联系电话</div>
+								<input name='tel' class='form-control' placeholder="联系电话" maxlength='50' v-model='Data.tel' bindinput='telInput' v-bind:disabled='btnText=="审核中" || btnText=="审核通过"' />
+							</div>
+							<div class="section">
+								<div class='form-title'>办公地址</div>
+								<textarea name='address' class='form-control' bindblur="bindTextAreaBlur" auto-height maxlength="500" placeholder="办公地址" v-model='Data.address' bindinput='addressInput' v-bind:disabled='btnText=="审核中" || btnText=="审核通过"'></textarea>
+							</div>
+							<div class="section">
+								<div class='form-title'>营业执照</div>
+								<input name='business_licence' v-model='Data.business_licence' class='hide' />
+								<button type="button" class='form-control upload' size='mini' bindtap='chooseImage' data-type='businessLicence' v-bind:hidden='btnText=="审核中" || btnText=="审核通过"'>点击上传</button>
+								<div class='big-image' hidden='{{!businessLicenceImage}}'>
+									<image :src="businessLicenceImage" class='fileImg' mode='widthFix'></image>
+								</div>
+							</div>
+							<div class="section">
+								<div class='form-title'>身份证(正)</div>
+								<input name='id_card_just' v-model='Data.id_card_just' class='hide' />
+								<button type="button" class='form-control upload' size='mini' bindtap='chooseImage' data-type='idCardJust' v-bind:hidden='btnText=="审核中" || btnText=="审核通过"'>点击上传</button>
+								<div class='text-tip text-small'>公司法人身份证</div>
+								<div class='big-image' hidden='{{!idCardJustImage}}'>
+									<image :src="idCardJustImage" class='fileImg' mode='widthFix'></image>
+								</div>
+							</div>
+							<div class="section">
+								<div class='form-title'>身份证(反)</div>
+								<input name='id_card_back' v-model='Data.id_card_back' class='hide' />
+								<button type="button" class='form-control upload' size='mini' bindtap='chooseImage' data-type='idCardBack' v-bind:hidden='btnText=="审核中" || btnText=="审核通过"'>点击上传</button>
+								<div class='text-tip text-small'>公司法人身份证</div>
+								<div class='big-image' hidden='{{!idCardBackImage}}'>
+									<image :src="idCardBackImage" class='fileImg' mode='widthFix'></image>
+								</div>
+							</div>
+							<div class='center' wx:if='{{!expireComponyFunc}}'>
+								<div class='text-small text-gray'>尊贵企业版用户</div>
+							</div>
+							<div class='m-20'>
+								<button class='btn-save' :class='btnText==" 审核通过 "?"primary ":btnText=="审核中 "?"default ":"warn "' v-bind:disabled='btnText=="审核中" || btnText=="审核通过"'> {{btnText}} </button>
+							</div>
+						</div>
+					</form> 
+				</div>
+				<vfooter></vfooter>
+			</div>
+		</div>
+		<script src="/red_packet/js/app_5d1fdf5.js"></script>
+		<script src="/red_packet/js/view/user/company/auth_eb0b3a3.js"></script>
+	</body>
+
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <title>发红包</title>
+    <meta name="description" content="工蜂引流红包裂变">
+    <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/red_packet/css/app.css" rel="stylesheet"/>
+    <link href="/red_packet/css/view/red_packet.css" rel="stylesheet"/>
+    <script src="/red_packet/js/jquery.min.js"></script>
+    <script src="/red_packet/js/layer/layer.js"></script>
+    <script src="/red_packet/js/vue.min.js"></script>
+    <script src="/red_packet/js/app.js"></script>
+    <script src="/red_packet/js/common.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <script>
+        document.write(common.loader)
+    </script>
+<div v-cloak>
+    <vheader v-bind:nav='nav' v-on:lclick='backClick'></vheader>
+    <vnav></vnav>
+<transition name="no-mode-translate-demo-wrapper">
+<div v-if="on == 'index'" key="on">
+        <a open-type='navigate' url='/red_packet/pages/user/account/account' hidden='{{!isLoginAccount}}'>
+    <div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
+</a>
+<div class="container">
+<form class='form-view' @submit.prevent="submit">
+<div>
+    <div class="section">
+        <div class='form-title'>商家名称</div>
+        <input name='sendName' class='form-control' placeholder="填写商家名称" maxlength='30' v-model='model.sendName'/>
+    </div>
+    <div class="section">
+        <div class='form-title'>商家标志</div>
+        <input name='sendPhoto' v-model='model.sendPhoto' class='hide'/>
+        <img class="userinfo-avatar" :src="sendPhotoImage">
+        </image>
+        <button class='form-control upload' size='mini' v-on:click='chooseImage' type="button">点击上传</button>
+    </div>
+    <div class="section">
+        <div class='form-title'>总金额</div>
+        <input name='money' class='form-control' placeholder="红包总金额" type='number' v-model='model.money'/>
+        <div class='unit'>元</div>
+    </div>
+<div class="section">
+    <div class='form-title'>随机金额</div>
+    <input name='randomMoney' type='number' class='hide' v-model='model.randomMoney'/>
+<div class='random-money-view'>
+<div class="picker" v-for="item in arrayRandomMoney">
+<button type="button" class='form-control' v-bind:class="{active:item.id==model.randomMoney}"
+        v-on:click="changeRandomMoney(item.id)">{{item.name}}</button>
+</div>
+</div>
+</div>
+    <div class="section">
+        <div class='form-title'>活动标题</div>
+        <input name='blessings' class='form-control' placeholder="输入活动标题" maxlength='50' v-model='model.blessings'/>
+    </div>
+    <div class="section">
+        <div class='form-title'>活动内容</div>
+        <textarea name='remarks' class='form-control' bindblur="bindTextAreaBlur" auto-height maxlength="500"
+                  placeholder="想对他们说.."
+                  v-model='model.remarks'></textarea>
+    </div>
+    <div class="section position-no">
+        <div class='form-title'>代金券</div>
+        <input v-model='model.joinCouponIds' class='hide'/>
+        <button type="button" class='form-control m' size='mini' v-on:click="bindSelectCoupon">选择展示代金券</button>
+    </div>
+<div class='coupon-view'>
+<div class="coupon-item" v-for="item in couponList.Data" v-if="item.cls">
+<div class='coupon-item-body'>
+<div>{{ item.desc }}</div>
+<div class='text-small'>{{ item.condition }}</div>
+</div>
+</div>
+</div>
+    <div class="section position-no" v-if='!expireComponyFunc'>
+        <div class='form-title'>广告模板</div>
+        <input name='account_red_packet_card_id' v-model='model.redPacketCardId' class='hide'/>
+        <button type="button" class='form-control m' size='mini' v-on:click="bindSelectRedPacketCard">选择广告模板</button>
+    </div>
+        <div class='coupon-view' hidden='{{!redPacketCardName}}'>
+<div class="coupon-item">
+<div class='coupon-item-body'>
+<div>{{redPacketCardName}}</div>
+</div>
+</div>
+</div>
+<div class='center' v-if="expireComponyFunc">
+    <label class='text-small text-gray'>收取2%的服务费</label>
+<label class='text-small text-orange text-bold'>¥{{feeMoney}}，</label>
+    <a href="/red_packet/pages/user/open/func" class='text-small text-navigator text-skyblue'>开通企业版即可免服务费 >></a>
+</div>
+    <div class='center' v-else>
+        <div class='text-small text-gray'>尊贵企业版用户</div>
+    </div>
+    <div class='m-20'>
+        <button class='btn-save'> 发红包</button>
+    </div>
+    <!--<div class='m-20'>
+            <div class='text-small text-gray'>
+                根据小程序《即时通信工具公众信息服务发展管理暂行规定》要求，为保障发布内容的安全，所有红包祝福语及留言，我们都将进行审核，通过后即可分享；未通过审核的，我们将第一时间退还红包。退款完成后，原路退回到用户支付帐户。零钱即时到账；银行卡（储蓄卡及信用卡）1-3个工作日。
+            </div>
+        </div>-->
+</div>
+</form>
+    <div class='mtb'>
+        <button class='text-btn blue' size='mini' open-type='contact'> 联系客服</button>
+    </div>
+</div>
+</div>
+    <!--@click="on = 'index'"-->
+<div v-else-if="on == 'coupon'">
+<div id="content">
+<div class='coupon-page coupon-view'>
+<div v-for="(item,index) in couponList.Data" class="coupon-item" v-on:click="tapSelectCoupon(index)">
+<div class='coupon-item-body'>
+<div class='fl'>
+<div>
+<div class='money fl'>
+    ￥{{item.money}}
+</div>
+<div class='condition fl'>
+{{item.condition}}
+</div>
+</div>
+<div class='text-small desc'>{{item.desc}}</div>
+</div>
+    <i class="icon iconfont icon-xuanzhong-01 ml" v-bind:class="{success:item.cls=='active'}"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div v-else-if="on == 'redpacket'" @click="on = 'index'">
+<div id="content">
+    <div class='m'>
+        <a class="navigator" href="/red_packet/pages/user/card/edit.html">
+            <button class='text-gray' class='addCardBtn'> 新建红包卡片</button>
+        </a>
+    </div>
+<div id='content'>
+<div class='m'>
+<div class='card-list'>
+    <div v-if="List.Count<=0">
+        <div class='text-tip'>官方示例：</div>
+        <div class='card-item'>
+            <div class='card-name'>工蜂引流APP</div>
+            <div class='card-contact'>自动抢占流量入口，1天可达10万人。</div>
+            <div class='card-tel'>官网：www.9ee3.com</div>
+            <div class='card-address'></div>
+            <div class='card-defalut active'>默</div>
+        </div>
+    </div>
+<div v-for="(item,index) in cardList.Data">
+        <div class='card-item' bindtap='selectCard' data-id='{{item.id}}' data-name='{{item.name}}'>
+<div class='card-name'>{{item.name}}</div>
+<div class='card-contact'>{{item.contact}}</div>
+<div class='card-tel'>{{item.tel}}</div>
+<div class='card-address'>{{item.address}}</div>
+        <div class='card-defalut {{item.def=="1"?"active":""}}'>默</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</transition>
+    <vfooter></vfooter>
+</div>
+</div>
+<script src="/red_packet/js/wechat/jweixin-1.2.0.js"></script>
+<script src="/red_packet/js/wechat/config.js"></script>
+<script src="/red_packet/js/view/user/send/red_packet.js"></script>
+</body>
+
+</html>

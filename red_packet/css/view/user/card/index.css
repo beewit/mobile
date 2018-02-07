@@ -1,14 +1,14 @@
 /* pages/user/card/index.wxss */
 
-html {
+html.card-index {
 	background-color: #f9f9f9;
 }
 
-.card-list {
+.card-index .card-list {
 	margin-top: 20px;
 }
 
-.card-list .card-item {
+.card-index .card-list .card-item {
 	margin-bottom: 10px;
 	box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
 	padding: 10px;
@@ -19,18 +19,18 @@ html {
 	background-color: #fff;
 }
 
-.addCardBtn {
+.card-index .addCardBtn {
 	background-color: #fff;
 	border: 1px solid #000;
 }
 
-.card-list .card-item .card-name {
+.card-index .card-list .card-item .card-name {
 	font-size: 13pt;
 	font-weight: bold;
 	margin-bottom: 8px;
 }
 
-.card-list .card-item .card-defalut {
+.card-index .card-list .card-item .card-defalut {
 	position: absolute;
 	font-size: 9pt;
 	right: 10px;
@@ -45,18 +45,18 @@ html {
 	text-align: center;
 }
 
-.card-list .card-item .active {
+.card-index .card-list .card-item .active {
 	background-color: #ff2626;
 	color: #fff;
 }
 
-.text-tip {
+.card-index .text-tip {
 	font-size: 11pt;
 	text-align: left;
 	margin-bottom: 10px;
 }
 
-button.text-gray {
+.card-index button.text-gray {
 	display: block;
 	width: 100%;
 	line-height: 40px;

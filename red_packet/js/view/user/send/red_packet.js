@@ -1,4 +1,4 @@
-var wecatInit = false
+var wecatInit = false;
 new Vue({
 	el: '#app',
 	data: {
@@ -14,22 +14,20 @@ new Vue({
 			sendName: null,
 			sendPhoto: config.defaultPhoto,
 			randomMoney: 1,
+			joinCouponIds: null,
+			account_red_packet_card_id: null,
 		},
 		sendPhotoImage: config.defaultPhoto,
-		joinCouponIds: null,
-		blessings: null,
-		remarks: null,
-		money: 1,
 		redPacketCardId: null,
 		redPacketCardName: null,
 		feeMoney: 0,
 		couponList: {
 			PageIndex: 0,
-			Data: null,
+			Data: {}
 		},
 		cardList: {
 			PageIndex: 0,
-			Data: null,
+			Data: {}
 		},
 		selectCouponList: null,
 		expireComponyFunc: true,
@@ -124,7 +122,7 @@ new Vue({
 					arr.push(this.couponList.Data[index].id)
 				}
 			}
-			this.joinCouponIds = arr.join(",");
+			this.model.joinCouponIds = arr.join(",");
 		},
 		submit: function () {
 			console.log(this.model);
@@ -151,31 +149,37 @@ new Vue({
 			})
 		},
 		bindSelectCoupon: function () {
+			var that = this;
 			this.on = 'coupon';
 			this.nav.back = true;
-			this.nav.title = '选择展示代金券';
+			this.nav.title = '选择展示现金券';
 			if (this.couponList.PageIndex == 0) {
-				common.scroll("#content", function (load, reset) {
-					loadPage = load;
-					that.getCouponList(1, reset);
-				}, function (load, reset) {
-					loadPage = load;
-					that.getCouponList(that.couponList.PageIndex + 1, reset);
-				});
+				setTimeout(function () {
+					common.scroll("#content", function (load, reset) {
+						loadPage = load;
+						that.getCouponList(1, reset);
+					}, function (load, reset) {
+						loadPage = load;
+						that.getCouponList(that.couponList.PageIndex + 1, reset);
+					});
+				}, 100);
 			}
 		},
 		bindSelectRedPacketCard: function () {
+			var that = this;
 			this.on = 'redpacket';
 			this.nav.back = true;
 			this.nav.title = '选择红包名片';
 			if (this.cardList.PageIndex == 0) {
-				common.scroll("#content", function (load, reset) {
-					loadPage = load;
-					that.getCardList(1, reset);
-				}, function (load, reset) {
-					loadPage = load;
-					that.getCardList(that.cardList.PageIndex + 1, reset);
-				});
+				setTimeout(function () {
+					common.scroll("#content", function (load, reset) {
+						loadPage = load;
+						that.getCardList(1, reset);
+					}, function (load, reset) {
+						loadPage = load;
+						that.getCardList(that.cardList.PageIndex + 1, reset);
+					});
+				}, 100);
 			}
 		},
 		getCouponList: function (pageIndex) {
@@ -230,6 +234,15 @@ new Vue({
 					}, 500);
 				}
 			})
+		},
+		selectCard: function (id, name) {
+			var that = this;
+			//that.model.redPacketCardId = id;
+			that.redPacketCardName = name;
+			that.model.account_red_packet_card_id = id;
+			that.on = 'index';
+			that.nav.back = 'false';
+			that.nav.title = '发红包';
 		}
 	}
 });

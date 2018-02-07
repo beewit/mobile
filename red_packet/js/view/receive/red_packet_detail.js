@@ -17,16 +17,20 @@ new Vue({
 			contact: "自动抢占流量入口，1天可达10万人。",
 			tel: null,
 			address: "官网：www.9ee3.com",
-		}
+		},
+		shareNum: 0
 	},
-	mounted: function() {
+	mounted: function () {
+		wechatSDK.initConfig(['hideAllNonBaseMenuItem'], function () {
+			wx.hideAllNonBaseMenuItem();
+		});
 		this.id = common.getQueryString("id");
 		this.nav.lhref = '/red_packet/pages/receive/red_packet.html?id=' + this.id;
 		this.getRedPacket();
 		this.receiveRedPacket();
 	},
 	methods: {
-		getRedPacket: function() {
+		getRedPacket: function () {
 			var id = this.id;
 			var that = this;
 			//加载当前页的红包数据
@@ -35,26 +39,25 @@ new Vue({
 				data: {
 					id: id
 				},
-				success: function(res) {
-					if(res.ret == 200) {
-						if(res.data.pay_state == "已支付") {
+				success: function (res) {
+					if (res.ret == 200) {
+						if (res.data.pay_state == "已支付") {
 							res.data.send_photo = config.getFilePath(res.data.send_photo);
 							that.redPacket = res.data;
-							that.card = res.data.card;
+							if (res.data.card) {
+								that.card = res.data.card;
+							}
 							that.nav.title = res.data.send_name + " - 发红包啦！"
+							document.title = that.nav.title;
+							that.getShareNum();
 						} else {
-							util.toastError("无效红包")
-							setTimeout(function() {
-								wx.switchTab({
-									url: '/red_packet/pages/user/home/index',
-								})
-							}, 1000)
+							location.href = "/red_packet/pages/user/home.html";
 						}
 					}
 				}
 			})
 		},
-		receiveRedPacket: function() {
+		receiveRedPacket: function () {
 			var that = this;
 			common.ajax({
 				succTip: false,
@@ -62,10 +65,29 @@ new Vue({
 				data: {
 					id: that.id
 				},
-				success: function(res) {
+				success: function (res) {
 					that.qrcode = config.getFilePath(res.data.qrcode)
 				}
 			})
+		},
+		getShareNum: function () {
+			var that = this;
+			if (!that.redPacket) {
+				return
+			}
+			var that = this;
+			common.ajax({
+				url: config.shareRedPacketNumUrl,
+				data: {
+					id: that.redPacket.id
+				},
+				success: function (res) {
+					that.shareNum = res.data
+					if (that.shareNum <= 0) {
+						location.href = that.nav.lhref;
+					}
+				}
+			});
 		}
 	}
 });

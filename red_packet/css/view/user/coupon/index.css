@@ -1,5 +1,4 @@
-
-html  {
+html {
   background-color: #f9f9f9;
 }
 
@@ -178,7 +177,9 @@ html  {
   background-position: 9px 1px;
 }
 
-.coupon-item.expire .show, .coupon-item.use .show, .coupon-item.over .show {
+.coupon-item.expire .show,
+.coupon-item.use .show,
+.coupon-item.over .show {
   display: none;
 }
 
@@ -227,4 +228,11 @@ html  {
   background: radial-gradient(#f9f9f9 0, #f9f9f9 5px, #00b563 5px);
   background-size: 15px 15px;
   background-position: 9px 1px;
+}
+
+.coupon-img {
+  width: 35px;
+  height: 35px;
+  display: block;
+  margin: 0 auto;
 }

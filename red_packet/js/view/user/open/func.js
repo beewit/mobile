@@ -1,3 +1,4 @@
+var wecatInit = false;
 new Vue({
 	el: '#app',
 	data: {
@@ -18,11 +19,23 @@ new Vue({
 		GetFuncFlog: true,
 		Expire: null
 	},
-	mounted: function() {
+	mounted: function () {
+		var that = this;
+		wechatSDK.initConfig(['chooseWXPay'], function () {
+			wecatInit = true;
+		});
 		this.getFuncType();
+		common.getToken(function (flog, userinfo) {
+			if (!flog) {
+				that.isLoginAccount = false;
+			} else {
+				that.isLoginAccount = true;				
+				that.getEffectiveFuncById();
+			}
+		})
 	},
-	methods: { 
-		getFuncType: function() {
+	methods: {
+		getFuncType: function () {
 			var that = this;
 			common.ajax({
 				url: config.getFuncTypeUrl,
@@ -30,17 +43,17 @@ new Vue({
 					fid: that.FuncId,
 					type: 1
 				},
-				success: function(res) {
+				success: function (res) {
 					var list = [];
 					var charge = res.data.funcCharge;
 					var sumPrice = 0.00;
-					if(charge) {
-						for(var index in charge) {
+					if (charge) {
+						for (var index in charge) {
 							charge[index].sumPrice = parseFloat(res.data.func[0].price) * charge[index].days;
 							list.push(charge[index]);
-							if(charge[index].default == '是') {
+							if (charge[index].default == '是') {
 								sumPrice = charge[index].sumPrice;
-								if(charge[index].discount > 0) {
+								if (charge[index].discount > 0) {
 									sumPrice = sumPrice * charge[index].discount;
 									charge[index].discountTip = "限时" + parseInt(charge[index].discount * 10) + "折"
 								}
@@ -56,27 +69,30 @@ new Vue({
 				}
 			})
 		},
-		selectFuncChargeTap: function(index,sumPrice) {  
-			if(this.Charge[index].discount > 0) {
+		selectFuncChargeTap: function (index, sumPrice) {
+			if (this.Charge[index].discount > 0) {
 				sumPrice = sumPrice * this.Charge[index].discount;
 			}
-			this.SelectIndex=index;
-			this.SumPrice=sumPrice; 
+			this.SelectIndex = index;
+			this.SumPrice = sumPrice;
 		},
-		paymentFuncTap: function(e) {
+		paymentFuncTap: function (e) {
 			var that = this;
-			that.setData({
-				Loading: true
-			})
-			app.paymentFunc(that.FuncId, that.List[that.SelectIndex].id,
-				function(status) {
-					if(status) {
-						that.getExpirationTime();
+			wechatSDK.paymentFunc(that.FuncId, that.List[that.SelectIndex].id,
+				function (status) {
+					if (status) {
+						that.getEffectiveFuncById();
 					}
-					that.setData({
-						Loading: false
-					})
 				})
+		},
+		getEffectiveFuncById: function () {
+			var that = this;
+			common.getEffectiveFuncById(common.redPacketFuncId, function (res) {
+				that.Expire = common.getRedPacketFuncExpireTime()
+				if (!that.Expire) {
+					that.ExpireTime = common.formatDate(new Date(res.data.expiration_time.replace(/\-/g, "\/")), "yyyy-MM-dd");
+				}
+			})
 		}
 	}
 })

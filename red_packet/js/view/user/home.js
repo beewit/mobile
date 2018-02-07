@@ -6,9 +6,9 @@ new Vue({
 			title: "我的"
 		},
 		Account: {
-			nickname:'工蜂引流[未登录]',
-			photo:config.defaultPhoto
-		}, 
+			nickname: '工蜂引流[未登录]',
+			photo: config.defaultPhoto
+		},
 		isLoginAccount: true,
 		expireComponyFunc: true,
 		Loading: false,
@@ -25,7 +25,8 @@ new Vue({
 					that.expireComponyFunc = common.getRedPacketFuncExpireTime()
 				})
 			}
-		})
+		});
+		wechatSDK.initConfig(['scanQRCode'], function () {});
 	},
 	methods: {
 		logOut: function () {
@@ -34,6 +35,17 @@ new Vue({
 				icon: 1
 			}, function () {
 				location.href = location.href;
+			});
+		},
+		scanCoupon: function () {
+			wechatSDK.scanQRCode(function (result) {
+				common.ajax({
+					url: config.useCouponQrCodeUrl,
+					data: {
+						qrCodeKey: result
+					},
+					success: function (res) {}
+				});
 			});
 		}
 	}

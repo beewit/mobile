@@ -26,7 +26,7 @@ Vue.component('vheader', {
 Vue.component('vnav', {
 	template: '<div class="nav">' +
 		'<a href="/red_packet/pages/user/send/red_packet.html" v-bind:class="{active:location.pathname.toLowerCase()==\'/red_packet/pages/user/send/red_packet.html\'}"><i class="icon iconfont icon-hongbao"></i><span>发红包</span></a>' +
-		'<a href="/red_packet/pages/user/send/coupon.html" v-bind:class="{active:location.pathname.toLowerCase()==\'/red_packet/pages/user/send/coupon.html\'}"><i class="icon iconfont icon-31hongbao"></i><span>发代金券</span></a>' +
+		'<a href="/red_packet/pages/user/send/coupon.html" v-bind:class="{active:location.pathname.toLowerCase()==\'/red_packet/pages/user/send/coupon.html\'}"><i class="icon iconfont icon-31hongbao"></i><span>发现金券</span></a>' +
 		'<a  href="/red_packet/pages/user/home.html" v-bind:class="{active:location.pathname.toLowerCase()==\'/red_packet/pages/user/home.html\'}"><i class="icon iconfont icon-wode-copy"></i><span>我的</span></a></div>'
 });
 // 注册底部标语
@@ -44,7 +44,20 @@ Vue.component('vpage', {
 		'<div class="loading2 complete" v-if="data.Count==0">暂无数据</div>' +
 		'</div>'
 });
-
+//分享提示
+Vue.component('vshare', {
+	template: '<div class="wxtip" id="JweixinTip">' +
+		'<span class="wxtip-icon"></span>' +
+		'<p class="wxtip-txt">点击右上角，分享给好朋友<br>小伙伴们一起抢红包！</p>' +
+		'</div>'
+});
+//联系客服
+Vue.component('vcontact', {
+	template: '<div class="mtb">' +
+		'<a class="text-btn blue" href="http://qm.qq.com/cgi-bin/qm/qr?k=0Zy-3dblwO02GlxOtYLGGGCuv89pSFIX"> 联系客服</a>' +
+		'</div>'
+});
+var fileDoMain = "https://file.9ee3.com/";
 var ssoHost = "/sso"; //"https://sso.9ee3.com";
 var hiveHost = "/hive"; //"https://hive.9ee3.com";
 var fileHost = "/file/"; //"https://file.9ee3.com/";

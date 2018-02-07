@@ -11,80 +11,81 @@
     <meta http-equiv="x-dns-prefetch-control" content="on">
     <meta name="format-detection" content="telephone=no">
     <meta name="renderer" content="webkit">
-    <title>我的代金券</title>
+    <title>我的现金券</title>
     <meta name="description" content="工蜂引流红包裂变">
     <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
     <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link href="/red_packet/css/app.css" rel="stylesheet"/>
-    <link href="/red_packet/css/view/user/coupon/index.css" rel="stylesheet"/>
+    <link href="/red_packet/css/app.css" rel="stylesheet" />
+    <link href="/red_packet/css/view/user/coupon/index.css" rel="stylesheet" />
     <script src="/red_packet/js/jquery.min.js"></script>
     <script src="/red_packet/js/layer/layer.js"></script>
-    <script src="/red_packet/js/common.js"></script>
     <script src="/red_packet/js/vue.min.js"></script>
+    <script src="/red_packet/js/app.js"></script>
+    <script src="/red_packet/js/common.js"></script>
 </head>
 
 <body>
-<div id="app">
-    <script>
-        document.write(common.loader)
-    </script>
-    <div v-cloak>
-        <vheader v-bind:nav='nav'></vheader>
-        <vnav></vnav>
-        <div class='coupon-view'>
-            <div class='coupon-nav'>
-                <div v-on:click='navChange("")'>
-                    <label :class='Where==""?"active":""'>未使用</label>
+    <div id="app">
+        <script>
+            document.write(common.loader)
+        </script>
+        <div v-cloak>
+            <vheader v-bind:nav='nav'></vheader>
+            <vnav></vnav>
+            <div class='coupon-view'>
+                <div class='coupon-nav'>
+                    <div v-on:click='navChange("")'>
+                        <label :class='Where==""?"active":""'>未使用</label>
+                    </div>
+                    <div v-on:click='navChange("finish")'>
+                        <label :class='Where=="finish"?"active":""'>已使用</label>
+                    </div>
+                    <div v-on:click='navChange("expire")'>
+                        <label :class='Where=="expire"?"active":""'>已过期</label>
+                    </div>
                 </div>
-                <div v-on:click='navChange("finish")'>
-                    <label :class='Where=="finish"?"active":""'>已使用</label>
-                </div>
-                <div v-on:click='navChange("expire")'>
-                    <label :class='Where=="expire"?"active":""'>已过期</label>
-                </div>
-            </div>
-            <div id='content'>
-                <div class='coupon-body'>
-                    <block v-for="(item,index) in List.Data">
-                        <div class='coupon-item' :class='Where=="expire"?"expire":item.receiveStatus=="已使用"?"use":""'>
-                            <div class='i'></div>
-                            <div class='l'></div>
-                            <div class='r'></div>
-                            <div class="coupon-expire iconfont icon-yiguoqi"></div>
-                            <div class="coupon-use iconfont icon-yishiyong"></div>
-                            <div class='coupon-top'>
-                                <div class='coupon-money'>
-                                    ￥
-                                    <b>{{item.money}}</b>
-                                </div>
-                                <div class='coupon-desc'>
-                                    <div class='coupon-condition'>{{item.condition}}</div>
-                                    <div class='coupon-time'>截止时间：{{item.expire_time}}</div>
-                                </div>
-                                <div class='coupon-handle'>
-                                    <div class='show' v-if='Where==""' v-on:click='useCoupon(item.receiveId)'>使用二维码
+                <div id='content'>
+                    <div class='coupon-body'>
+                        <block v-for="(item,index) in List.Data">
+                            <div class='coupon-item' :class='Where=="expire"?"expire":item.receiveStatus=="已使用"?"use":""'>
+                                <div class='i'></div>
+                                <div class='l'></div>
+                                <div class='r'></div>
+                                <div class="coupon-expire iconfont icon-yiguoqi"></div>
+                                <div class="coupon-use iconfont icon-yishiyong"></div>
+                                <div class='coupon-top'>
+                                    <div class='coupon-money'>
+                                        ￥
+                                        <b>{{item.money}}</b>
+                                        <img class="coupon-img" :src="fileDoMain+item.photo">
+                                    </div>
+                                    <div class='coupon-desc'>
+                                        <div class='coupon-condition'>{{item.condition}}</div>
+                                        <div class='coupon-time'>截止时间：{{item.expire_time}}</div>
+                                    </div>
+                                    <div class='coupon-handle'>
+                                        <div class='show' v-if='Where==""' v-on:click='useCoupon(item.receiveId)'>使用二维码
+                                        </div>
                                     </div>
                                 </div>
+                                <div class='coupon-bottom' :class='item.showDesc?"show-desc":""' v-on:click='tapOpenDesc(index)'>
+                                    <div class='icon-jiantou iconfont' :class='item.showDesc?"icon-jiantou-down":"icon-jiantou-up"'></div>
+                                    <div class='coupon-bottom-content'>{{item.desc}}</div>
+                                </div>
                             </div>
-                            <div class='coupon-bottom' :class='item.showDesc?"show-desc":""'
-                                 v-on:click='tapOpenDesc(index)'>
-                                <div class='icon-jiantou iconfont'
-                                     :class='item.showDesc?"icon-jiantou-down":"icon-jiantou-up"'></div>
-                                <div class='coupon-bottom-content'>{{item.desc}}</div>
-                            </div>
-                        </div>
-                    </block>
-                    <vpage v-bind:data='List'></vpage>
+                        </block>
+                        <vpage v-bind:data='List'></vpage>
+                    </div>
                 </div>
+                <vfooter></vfooter>
             </div>
-            <vfooter></vfooter>
         </div>
     </div>
-</div>
-<script src="/red_packet/js/app.js"></script>
-<script src="/red_packet/js/view/user/coupon/index.js"></script>
+    <script src="/red_packet/js/wechat/jweixin-1.2.0.js"></script>
+    <script src="/red_packet/js/wechat/config.js"></script>
+    <script src="/red_packet/js/view/user/coupon/index.js"></script>
 </body>
 
 </html>

@@ -129,11 +129,11 @@ var wechatSDK = {
 				"subject": "开通红包裂变企业版",
 				"fcId": fcId,
 				"funcId": funcId,
-				"pt": "微信小程序",
+				"pt": "微信H5",
 			},
 			success: function (res) {
 				//'/pages/user/open/func'
-				that.requestPayment(res, null, backFunc)
+				that.requestPayment(res, '/red_packet/pages/user/open/func.html', backFunc)
 			},
 			error: function () {
 				layer.msg("支付失败", {
@@ -191,7 +191,7 @@ var wechatSDK = {
 			}
 		});
 	},
-	checkPayment: function (tradeNo, url, backFunc) { 
+	checkPayment: function (tradeNo, url, backFunc) {
 		try {
 			var that = this;
 			common.ajax({
@@ -232,5 +232,113 @@ var wechatSDK = {
 		} catch (e) {
 			alert(JSON.stringify(e));
 		}
+	},
+	previewImage: function (current, urls) {
+		wx.previewImage({
+			current: current, // 当前显示图片的http链接
+			urls: urls // 需要预览的图片http链接列表
+		});
+	},
+	scanQRCode: function (resFunc) {
+		wx.scanQRCode({
+			needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+			scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+			success: function (res) {
+				console.log(res);
+				var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+				resFunc(res.resultStr);
+			},
+			fail: function (e) {
+				layer.msg("扫码失败", {
+					icon: 0
+				});
+			}
+		});
+	},
+	initShare: function (title, link, imgUrl, desc, succFunc, canFunc, errFunc) {
+		wx.onMenuShareTimeline({
+			title: title,
+			link: link,
+			imgUrl: imgUrl,
+			desc: desc,
+			success: function (e) {
+				if (succFunc) {
+					succFunc(e);
+				}
+			},
+			cancel: function (e) {
+				if (canFunc) {
+					canFunc(e);
+				}
+			},
+			fail: function (e) {
+				if (errFunc) {
+					errFunc(e);
+				}
+			}
+		});
+		wx.onMenuShareAppMessage({
+			title: title,
+			link: link,
+			imgUrl: imgUrl,
+			desc: desc,
+			success: function (e) {
+				if (succFunc) {
+					succFunc(e);
+				}
+			},
+			cancel: function (e) {
+				if (canFunc) {
+					canFunc(e);
+				}
+			},
+			fail: function (e) {
+				if (errFunc) {
+					errFunc(e);
+				}
+			}
+		});
+		wx.onMenuShareQQ({
+			title: title,
+			link: link,
+			imgUrl: imgUrl,
+			desc: desc,
+			success: function (e) {
+				if (succFunc) {
+					succFunc(e);
+				}
+			},
+			cancel: function (e) {
+				if (canFunc) {
+					canFunc(e);
+				}
+			},
+			fail: function (e) {
+				if (errFunc) {
+					errFunc(e);
+				}
+			}
+		});
+		wx.onMenuShareQZone({
+			title: title,
+			link: link,
+			imgUrl: imgUrl,
+			desc: desc,
+			success: function (e) {
+				if (succFunc) {
+					succFunc(e);
+				}
+			},
+			cancel: function (e) {
+				if (canFunc) {
+					canFunc(e);
+				}
+			},
+			fail: function (e) {
+				if (errFunc) {
+					errFunc(e);
+				}
+			}
+		});
 	}
 };

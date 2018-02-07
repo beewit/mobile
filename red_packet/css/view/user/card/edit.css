@@ -1,4 +1,4 @@
-page {
+html {
 	background-color: #f9f9f9;
 }
 
@@ -33,13 +33,13 @@ page {
 .advertQrCode .fl div {
 	display: block;
 	line-height: 20px;
-	margin-bottom: 40rpx;
+	margin-bottom: 20px;
 	color: #fff;
 	font-size: 11pt;
 	text-align: left;
 }
 
-.advertQrCode .fl text.title {
+.advertQrCode .fl div.title {
 	font-size: 13pt;
 	font-weight: bold;
 }

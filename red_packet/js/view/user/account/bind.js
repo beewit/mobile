@@ -48,12 +48,16 @@ new Vue({
 			var that = this;
 			var mobile = that.model.mobile;
 			var code = that.model.code
-			if (mobile.length != 11 || isNaN(mobile)) {
-				util.toastErrorWin("请输入有效的手机号码")
+			if (mobile.length != 11 || isNaN(mobile)) { 
+				layer.msg("请输入有效的手机号码", {
+					icon: 0
+				});
 				return
 			}
 			if (common.isEmpty(code)) {
-				util.toastErrorWin("请输入图形验证码")
+				layer.msg("请输入图形验证码", {
+					icon: 0
+				}); 
 				return
 			}
 			common.ajax({

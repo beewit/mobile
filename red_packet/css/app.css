@@ -819,3 +819,35 @@ button.text-btn::after {
 		transform: rotate(360deg);
 	}
 }
+
+.big-image {
+	max-width: 100%;
+}
+
+.wxtip {
+	background: rgba(0, 0, 0, 0.8);
+	text-align: center;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 998;
+}
+
+.wxtip-icon {
+	width: 52px;
+	height: 67px;
+	background: url(/red_packet/img/weixin-tip.png) no-repeat;
+	display: block;
+	position: absolute;
+	right: 30px;
+	top: 20px;
+}
+
+.wxtip-txt {
+	padding-top: 107px;
+	color: #fff;
+	font-size: 16px;
+	line-height: 1.5;
+}

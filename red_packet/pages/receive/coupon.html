@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>领取现金券</title>
+    <meta name="description" content="工蜂引流红包裂变">
+    <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/red_packet/css/app.css" rel="stylesheet" />
+    <link href="/red_packet/css/view/receive/coupon.css" rel="stylesheet" />
+    <script src="/red_packet/js/jquery.min.js"></script>
+    <script src="/red_packet/js/layer/layer.js"></script>
+    <script src="/red_packet/js/vue.min.js"></script>
+    <script src="/red_packet/js/app.js"></script>
+    <script src="/red_packet/js/common.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <script>
+            document.write(common.loader)
+        </script>
+        <div v-cloak>
+            <vheader v-bind:nav='nav'></vheader>
+            <vnav></vnav>
+
+            <a open-type='navigate' url='/red_packet/pages/user/account/account.html' hidden='{{!isLoginAccount}}'>
+                <div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
+            </a>
+            <div id='content'>
+                <div class='coupon-body'>
+                    <block v-if='Count>0' v-for="(item,index) in List">
+                        <div class='coupon-item' :class='item.receiveStatus?"":item.number==item.receive_number?"over":item.expire?"expire":""'>
+                            <div class='i'></div>
+                            <div class='l'></div>
+                            <div class='r'></div>
+                            <lable class="coupon-expire iconfont icon-yiguoqi"></lable>
+                            <lable class="coupon-over">已领完</lable>
+                            <div class='coupon-top'>
+                                <div class='coupon-money'>
+                                    ￥
+                                    <lable>{{item.money}}</lable>
+                                </div>
+                                <div class='coupon-desc'>
+                                    <div class='coupon-condition'>{{item.condition}}</div>
+                                    <div class='coupon-time'>截止时间：{{item.expire_time}}</div>
+                                </div>
+                                <div class='coupon-handle'>
+                                    <lable v-if='!item.expire && !item.receiveStatus && item.number!=item.receive_number' class='show' bindtap='receive'>领取
+                                    </lable>
+                                    <lable v-if='item.receiveStatus' class='show disabled'>已领取</lable>
+                                </div>
+                            </div>
+                            <div class='coupon-bottom ' :class='item.showDesc?"show-desc":""' bindtap='tapOpenDesc' data-index="{{index}}">
+                                <lable class='icon-jiantou iconfont' :class='item.showDesc?"icon-jiantou-down":"icon-jiantou-up"'></lable>
+                                <div class='coupon-bottom-content'>{{item.desc}}</div>
+                            </div>
+                        </div>
+                    </block>
+                    <div class="loading2 complete" else>无数据或已过期</div> 
+                </div>
+                <vfooter></vfooter>
+            </div>
+        </div>
+    </div>
+    <script src="/red_packet/js/wechat/jweixin-1.2.0.js"></script>
+    <script src="/red_packet/js/wechat/config.js"></script>
+    <script src="/red_packet/js/view/receive/coupon.js"></script>
+</body>
+</html>

@@ -11,7 +11,7 @@
     <meta http-equiv="x-dns-prefetch-control" content="on">
     <meta name="format-detection" content="telephone=no">
     <meta name="renderer" content="webkit">
-    <title>发代金券</title>
+    <title>发现金券</title>
     <meta name="description" content="工蜂引流红包裂变">
     <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
     <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
@@ -52,7 +52,7 @@
                 </div>
                 <div class="section">
                     <div class='form-title'>抵扣金额</div>
-                    <input class='form-control' name='money' placeholder="填写代金券金额" type='number' v-model='model.money'/>
+                    <input class='form-control' name='money' placeholder="填写现金券金额" type='number' v-model='model.money'/>
                     <div class='unit'>元</div>
                 </div>
                 <div class="section">
@@ -67,24 +67,22 @@
                 </div>
                 <div class="section">
                     <div class='form-title'>数量</div>
-                    <input class='form-control' name='number' placeholder="代金券数量" maxlength='6' type='number'
+                    <input class='form-control' name='number' placeholder="现金券数量" maxlength='6' type='number'
                            v-model='model.number'/>
                 </div>
                 <div class="section">
                     <div class='form-title'>使用描述</div>
-                    <textarea class='form-control' name='desc' maxlength="500" placeholder="使用代金券的描述.."
+                    <textarea class='form-control' name='desc' maxlength="500" placeholder="使用现金券的描述.."
                               v-model='model.desc'></textarea>
                 </div>
                 <div class='center'>
-                    <div class='text-tip text-small'>一旦发送代金券不可修改</div>
+                    <div class='text-tip text-small'>一旦发送现金券不可修改</div>
                 </div>
                 <div class='m-20'>
-                    <button class='btn-save'> 发送代金券</button>
+                    <button class='btn-save'> 发送现金券</button>
                 </div>
             </form>
-            <div class='mtb'>
-                <button class='text-btn blue'> 联系客服</button>
-            </div>
+            <vcontact></vcontact>
         </div>
         <vfooter></vfooter>
     </div>

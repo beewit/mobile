@@ -16,78 +16,89 @@ new Vue({
 			send_photo: config.defaultPhoto,
 			send_name: "工蜂引流",
 			blessings: "祝大家新年快乐",
-		}
+		},
+		sendPhotoImg: null,
+		loadEnd: false,
+		openShareTip: false
 	},
-	mounted: function() {
+	mounted: function () {
+		var that = this;
 		this.id = common.getQueryString("id");
 		this.getRedPacket();
+
+		wechatSDK.initConfig(['chooseImage', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo'], function () {
+			that.initShare();
+		});
 	},
 	methods: {
-		receiveCoupon: function() {
-			if(!this.data.redPacket) {
-				return
-			}
-			if(this.data.redPacket.review_status != "审核通过") {
-				wx.showModal({
-					title: '提示',
-					showCancel: false,
-					content: '红包未通过审核无法领取',
-					success: function(res) {
-
-					}
-				})
-			}
-			if(this.data.shareNum <= 0) {
-				wx.showModal({
-					title: '提示',
-					showCancel: false,
-					content: '你还没有分享红包哦，点击下面的去分享！',
-					success: function(res) {
-						if(res.confirm) {
-							console.log('用户点击确定')
-						}
-					}
-				})
-				return
-			}
-			if(app.globalData.userInfo) {
-				wx.navigateTo({
-					url: '/red_packet/pages/receive/coupon?id=' + this.data.redPacket.id,
-				})
-			} else {
-				wx.openSetting({
-					success: (res) => {
-						if(res.authSetting['scope.userInfo']) {
-							wx.navigateTo({
-								url: '/red_packet/pages/receive/coupon?id=' + this.data.redPacket.id,
-							})
-						}
-					}
-				})
-			}
-		},
-		receiveRedPacketTap: function() {
-			if(!this.redPacket) {
-				return
-			}
-			if(this.redPacket.review_status != "审核通过") {
-				layer.alert('红包未通过审核无法领取', {
-					icon: 1,
-					title: '温馨提示'
-				})
-				return;
-			}
-			if(this.shareNum <= 0) {
-				layer.alert('你还没有分享红包哦，点击下面的去分享！', {
-					icon: 1,
-					title: '温馨提示'
-				})
-				return;
-			}
+		initShare: function () {
 			var that = this;
+			if (!that.loadEnd) {
+				setTimeout(function () {
+					that.initShare();
+				}, 100);
+			}
+			wechatSDK.initShare(
+				that.redPacket.send_name + "，发现金红包啦！",
+				location.href,
+				fileDoMain + that.sendPhotoImg,
+				that.redPacket.blessings,
+				function () {
+					that.addShare();
+				},
+				function () {},
+				function (e) {
+					alert(JSON.stringify(e));
+				});
+		},
+		receiveCoupon: function () {
+			var that = this;
+			if (!that.redPacket) {
+				return
+			}
+			if (that.redPacket.review_status != "审核通过") {
+				layer.alert('红包未通过审核无法领取', {
+					icon: 0,
+					title: '温馨提示'
+				})
+				return;
+			}
+			if (that.shareNum <= 0) {
+				that.openShareTip = true;
+				layer.alert('你还没有分享红包哦，点击下面的去分享！', {
+					icon: 0,
+					title: '温馨提示'
+				})
+				return;
+			}
+			location.href = '/red_packet/pages/receive/coupon.html?id=' + that.redPacket.id;
+		},
+		receiveRedPacketTap: function () {
+			var that = this;
+			if (!that.redPacket) {
+				return
+			}
+			if (that.redPacket.review_status != "审核通过") {
+				layer.alert('红包未通过审核无法领取', {
+					icon: 0,
+					title: '温馨提示'
+				})
+				return;
+			}
+			if (that.shareNum <= 0) {
+				that.openShareTip = true;
+				layer.alert('你还没有分享红包哦，点击下面的去分享！', {
+					icon: 0,
+					title: '温馨提示'
+				})
+				return;
+			}
 			that.receiveRedPacket();
 		},
-		receiveRedPacket: function() {
+		closeShare: function () {
+			that.openShareTip = false;
+		},
+		receiveRedPacket: function () {
 			var that = this;
 			common.ajax({
 				succTip: false,
@@ -95,12 +106,12 @@ new Vue({
 				data: {
 					id: that.id
 				},
-				success: function() {
+				success: function () {
 					location.href = '/red_packet/pages/receive/red_packet_detail.html?id=' + that.redPacket.id;
 				}
 			})
 		},
-		getRedPacket: function() {
+		getRedPacket: function () {
 			var that = this;
 			//加载当前页的红包数据
 			common.ajax({
@@ -108,9 +119,11 @@ new Vue({
 				data: {
 					id: that.id
 				},
-				success: function(res) {
-					if(res.ret == 200) {
-						if(res.data.redPacket.pay_state == "已支付") {
+				success: function (res) {
+					if (res.ret == 200) {
+						if (res.data.redPacket.pay_state == "已支付") {
+							that.loadEnd = true;
+							that.sendPhotoImg = res.data.redPacket.send_photo;
 							res.data.redPacket.send_photo = config.getFilePath(res.data.redPacket.send_photo);
 							that.recredCouponNum = res.data.couponList.length;
 							that.recredPacketNum = res.data.redPacketList.length;
@@ -121,17 +134,19 @@ new Vue({
 							that.getShareNum();
 							that.addRedPacketAccessLog();
 						} else {
-							util.toastError("无效红包")
 							location.href = "/red_packet/pages/user/home.html";
 						}
 					}
 				}
 			})
 		},
-		addShare: function() {
+		addShare: function () {
 			var that = this;
-			if(!that.redPacket) {
-				util.toastError("未获取到红包信息")
+			if (!that.redPacket) {
+				layer.alert('未获取到红包信息', {
+					icon: 0,
+					title: '温馨提示'
+				})
 				return
 			}
 			common.ajax({
@@ -139,14 +154,14 @@ new Vue({
 				data: {
 					id: that.redPacket.id
 				},
-				success: function() {
+				success: function () {
 					that.shareNum = 1
 				}
 			});
 		},
-		getShareNum: function() {
+		getShareNum: function () {
 			var that = this;
-			if(!that.redPacket) {
+			if (!that.redPacket) {
 				return
 			}
 			var that = this;
@@ -155,14 +170,14 @@ new Vue({
 				data: {
 					id: that.redPacket.id
 				},
-				success: function(res) {
+				success: function (res) {
 					that.shareNum = res.data
 				}
 			});
 		},
-		addRedPacketAccessLog: function() {
+		addRedPacketAccessLog: function () {
 			var that = this;
-			if(!that.redPacket) {
+			if (!that.redPacket) {
 				return
 			}
 			var that = this;
@@ -174,7 +189,7 @@ new Vue({
 				data: {
 					id: that.redPacket.id
 				},
-				success: function(res) {}
+				success: function (res) {}
 			});
 		}
 	}

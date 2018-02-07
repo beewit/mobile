@@ -11,7 +11,7 @@
     <meta http-equiv="x-dns-prefetch-control" content="on">
     <meta name="format-detection" content="telephone=no">
     <meta name="renderer" content="webkit">
-    <title>我的</title>
+    <title>我的 - 新增广告模板</title>
     <meta name="description" content="工蜂引流红包裂变">
     <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
     <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
@@ -21,8 +21,9 @@
     <link href="/red_packet/css/view/user/card/edit.css" rel="stylesheet"/>
     <script src="/red_packet/js/jquery.min.js"></script>
     <script src="/red_packet/js/layer/layer.js"></script>
-    <script src="/red_packet/js/common.js"></script>
     <script src="/red_packet/js/vue.min.js"></script>
+    <script src="/red_packet/js/app.js"></script>
+    <script src="/red_packet/js/common.js"></script>
 </head>
 
 <body>
@@ -33,14 +34,14 @@
     <div v-cloak>
         <vheader v-bind:nav='nav'></vheader>
         <vnav></vnav>
-        <a open-type='navigate' url='/red_packet/pages/user/account/account' v-bind:hidden='isLoginAccount'>
+        <a open-type='navigate' url='/red_packet/pages/user/account/account' v-if='!isLoginAccount'>
             <div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
         </a>
         <div class="container">
             <form class='form-view' @submit.prevent="submit">
                 <div>
                     <div class="section">
-                        <div class='form-title'>卡片名称</div>
+                        <div class='form-title'>模板名称</div>
                         <input name='name' class='form-control' placeholder="输入卡片名称" maxlength='50'
                                v-model='model.name'/>
                     </div>
@@ -74,8 +75,8 @@
                 <div class='text-tip'>官方示例：</div>
                 <div class='advertQrCode'>
                     <div class='fl w60'>
-                        <div class='title'>工蜂引流APP</div>
-                        <div>自动抢占流量入口，1天可达10万人。</div>
+                        <div class='title'>红包裂变</div>
+                        <div>红包裂变，1天可达10万人。</div>
                         <div class='m0'>官网：www.9ee3.com</div>
                     </div>
                     <div class='fr w40'>
@@ -86,8 +87,7 @@
         </div>
         <vfooter></vfooter>
     </div>
-</div>
-<script src="/red_packet/js/app.js"></script>
+</div> 
 <script src="/red_packet/js/view/user/card/edit.js"></script>
 </body>
 

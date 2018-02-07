@@ -35,7 +35,7 @@
 	white-space: nowrap;
 	float: right;
 	display: block;
-	line-height: 100rpx;
+	line-height: 50px;
 	max-width: 90px;
 }
 
@@ -44,8 +44,8 @@
 }
 
 .list-item-head {
-	width: 80rpx;
-	height: 80rpx;
+	width: 50px;
+	height: 50px;
 	border-radius: 50%;
 	border: 1px solid #f1f1f1;
 	float: left;
@@ -79,8 +79,22 @@
 	color: #fff;
 }
 
-.line-group .handler-item {
-	padding: 0 20px;
+.handler-item {
+	width: 33.3333%;
+	float: left;
+	text-align: center;
+}
+
+.handler-item .icon {
+	margin-right: 5px;
+}
+
+.handler-item a {
+	width: 80px;
+	display: block;
+	margin: 0 auto;
+	line-height: 28px;
+	color: #fff;
 }
 
 .icon {

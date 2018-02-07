@@ -1,12 +1,12 @@
 // 加 md5
-fis.match('*.{js,css,png}', {
+fis.match('*.{js,css,jpg,gif,png}', {
     useHash: true
 });
 
 // 启用 fis-spriter-csssprites 插件
 fis.match('::package', {
     spriter: fis.plugin('csssprites')
-});
+}); 
 
 // 对 CSS 进行图片合并
 fis.match('*.css', {
@@ -18,6 +18,11 @@ fis.match('*.js', {
     // fis-optimizer-uglify-js 插件进行压缩，已内置
     optimizer: fis.plugin('uglify-js')
 });
+
+fis.match('*.min.js', {
+    //已经压缩过的js不进行压缩
+    optimizer: null
+})
 
 fis.match('*.css', {
     // fis-optimizer-clean-css 插件进行压缩，已内置

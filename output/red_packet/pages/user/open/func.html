@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>开通企业版</title>
+    <meta name="description" content="工蜂引流红包裂变">
+    <link rel="alternate icon" type="image/png" href="/red_packet/img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="/red_packet/img/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/red_packet/css/app_f591972.css" rel="stylesheet" />
+    <link href="/red_packet/css/view/user/open/func_6d13024.css" rel="stylesheet" />
+    <script src="/red_packet/js/jquery.min_3a2136e.js"></script>
+    <script src="/red_packet/js/layer/layer_59328fc.js"></script>
+    <script src="/red_packet/js/vue.min_77af8ad.js"></script>
+    <script src="/red_packet/js/app_153bde6.js"></script>
+    <script src="/red_packet/js/common_5d0e885.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <script>
+            document.write(common.loader)
+        </script>
+        <div v-cloak>
+            <vheader v-bind:nav='nav'></vheader>
+            <vnav></vnav>
+            <div>
+                <a href='/red_packet/pages/user/account/account.html' v-if='!isLoginAccount'>
+                    <div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
+                </a>
+                <div class='func-info' v-else>
+                    <div v-if='!ExpireTime' class='func-none'>未开通或已到期</div>
+                    <div v-else class='func-record'>已开通企业版，到期时间：{{ExpireTime}}</div>
+                </div>
+                <div class='func-ul'>
+
+                    <div v-if="List==null" class="loadDivBase">
+                        <div class="loadDiv">
+                            <div class="rond">
+                                <div class="test"></div>
+                            </div>
+                            <div class="load">
+                                <p>loading</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='func-li' :class='SelectIndex==index?"active":""' v-for="(item,index) in List" v-on:click="selectFuncChargeTap(index,item.sumPrice)">
+                        <div class='func-body'>
+                            <div class='func-text'>
+                                <div>{{item.sumPrice}}元/{{item.unit}}</div>
+                            </div>
+                            <div class='tip' hidden='{{item.give_days<=0}}'>赠送{{item.give_days}}天</div>
+                            <div class='tip' wx:if='{{item.tip}}'>{{item.tip}}</div>
+                            <div class='tip' wx:elseif='{{item.discount>0}}'>{{item.discountTip}}</div>
+
+                            <div class='iconfont icon-xuanzhong-copys'></div>
+                        </div>
+                    </div>
+                </div>
+                <div class='func-footer'>
+                    <div class='pay-money'>支付金额：
+                        <b class='text-orange text-bold'> ¥ {{SumPrice}}</b>
+                    </div>
+                    <button class="btn-save btn-success" v-on:click="paymentFuncTap" v-bind:disabled='PayBtnDisabled'> 微信支付</button>
+                </div>
+                <vfooter></vfooter>
+            </div>
+        </div>
+    </div>
+    <script src="/red_packet/js/wechat/jweixin-1.2.0_1eed598.js"></script>
+    <script src="/red_packet/js/wechat/config_d1435a5.js"></script>
+    <script src="/red_packet/js/view/user/open/func_a086b0f.js"></script>
+</body>
+
+</html>

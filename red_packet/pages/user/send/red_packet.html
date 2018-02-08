@@ -38,9 +38,7 @@
 			<vnav></vnav>
 			<transition name="no-mode-translate-demo-wrapper">
 				<div v-if="on == 'index'" key="on">
-					<a open-type='navigate' url='/red_packet/pages/user/account/account' hidden='{{!isLoginAccount}}'>
-						<div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
-					</a>
+						<vbind  v-if='!isLoginAccount'></vbind>
 					<div class="container">
 						<form class='form-view' @submit.prevent="submit">
 							<div>
@@ -106,7 +104,7 @@
 								<div class='center' v-if="expireComponyFunc">
 									<label class='text-small text-gray'>收取2%的服务费</label>
 									<label class='text-small text-orange text-bold'>¥{{feeMoney}}，</label>
-									<a href="/red_packet/pages/user/open/func" class='text-small text-navigator text-skyblue'>开通企业版即可免服务费 >></a>
+									<a href="/red_packet/pages/user/open/func.html" class='text-small text-navigator text-skyblue'>开通企业版即可免服务费 >></a>
 								</div>
 								<div class='center' v-else>
 									<div class='text-small text-gray'>尊贵企业版用户</div>
@@ -161,8 +159,8 @@
 									<div v-if="cardList.Count<=0">
 										<div class='text-tip'>官方示例：</div>
 										<div class='card-item'>
-											<div class='card-name'>工蜂引流APP</div>
-											<div class='card-contact'>自动抢占流量入口，1天可达10万人。</div>
+											<div class='card-name'>红包裂变</div>
+											<div class='card-contact'>红包裂变，1天可达10万人。</div>
 											<div class='card-tel'>官网：www.9ee3.com</div>
 											<div class='card-address'></div>
 											<div class='card-defalut active'>默</div>

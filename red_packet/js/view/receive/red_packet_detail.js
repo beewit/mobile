@@ -13,8 +13,8 @@ new Vue({
 			blessings: "祝大家新年快乐",
 		},
 		card: {
-			name: "工蜂引流APP",
-			contact: "自动抢占流量入口，1天可达10万人。",
+			name: "红包裂变",
+			contact: "红包裂变，1天可达10万人。",
 			tel: null,
 			address: "官网：www.9ee3.com",
 		},

@@ -43,7 +43,7 @@ func ScanHandler(w http.ResponseWriter, r *mp.Request) {
 	// 简单起见，把用户发送过来的文本原样回复过去
 	event := request.GetScanEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	global.Log.Info("%s %s %s %s", event.FromUserName, event.ToUserName, event.EventKey, event.Event)
-	tip := sendRedPacket(event.EventKey, event.FromUserName, r)
+	tip := sendRedPacket(event.EventKey, event.FromUserName)
 	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, tip)
 	mp.WriteRawResponse(w, r, resp)
 	global.Log.Info("ScanHandler 耗时：%v", time.Since(start))
@@ -56,13 +56,13 @@ func SubscribeHandler(w http.ResponseWriter, r *mp.Request) {
 	event := request.GetScanEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	//event.FromUserName
 	global.Log.Info("%s %s %s %s", event.FromUserName, event.ToUserName, event.EventKey, event.Event)
-	tip := sendRedPacket(event.EventKey, event.FromUserName, r)
+	tip := sendRedPacket(event.EventKey, event.FromUserName)
 	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, tip)
 	mp.WriteRawResponse(w, r, resp)
 	global.Log.Info("SubscribeHandler 耗时：%v", time.Since(start))
 }
 
-func sendRedPacket(eventKey, openId string, r *mp.Request) string {
+func sendRedPacket(eventKey, openId string) string {
 	if eventKey != "" {
 		sceneStr := eventKey
 		if strings.Contains(sceneStr, "|红包") {
@@ -177,7 +177,35 @@ func sendRedPacket(eventKey, openId string, r *mp.Request) string {
 							if sendFlog {
 								return fmt.Sprintf("已发送红包%.2f元，请点击领取到您的零钱", receiveMoney)
 							} else {
-								//这里将修改发送失败记录
+								//这里将修改发送失败记录回滚
+								global.DB.Tx(func(tx *mysql.SqlConnTransaction) {
+									x, err := tx.Update("UPDATE account_receive_red_packet SET status=?,fail_content=? WHERE id=?",
+										enum.RED_PACKET_STATUS_FAIL, errTip, receiveRedPacketId)
+									if err != nil {
+										global.Log.Error("发放失败回滚 update account_receive_red_packet  receiveMoney:%v,%v,%v  sql error:%s ", enum.RED_PACKET_STATUS_FAIL, errTip, receiveRedPacketId, err.Error())
+										panic(err)
+									}
+									if x <= 0 {
+										global.Log.Error("发放失败回滚 修改领取红包记录失败：%v,%v,%v", enum.RED_PACKET_STATUS_FAIL, errTip, receiveRedPacketId)
+										panic(err)
+									}
+									x, err = tx.Update("UPDATE account_send_red_packet SET send_money=send_money-? WHERE id=? AND status=? AND pay_state=? AND send_money-?>=0",
+										receiveMoney, redPacketId, enum.NORMAL, enum.PAY_STATUS_END, receiveMoney)
+									if err != nil {
+										global.Log.Error("发放失败回滚 update account_send_red_packet  receiveMoney: %v,%v,%v,%v,%v  sql error:%s ", receiveMoney, redPacketId, enum.NORMAL, enum.PAY_STATUS_END, receiveMoney, err.Error())
+										panic(err)
+									}
+									if x <= 0 {
+										global.Log.Error("发放失败回滚 修改发送红包已发送记录失败：%v,%v,%v,%v,%v", receiveMoney, redPacketId, enum.NORMAL, enum.PAY_STATUS_END, receiveMoney)
+										panic(err)
+									}
+									flog = true
+								}, func(err error) {
+									if err != nil {
+										global.Log.Error("发放失败回滚 领取红包更新失败%v", err)
+										flog = false
+									}
+								})
 								return errTip
 							}
 						} else {
@@ -185,10 +213,10 @@ func sendRedPacket(eventKey, openId string, r *mp.Request) string {
 							return "红包已经被领完了"
 						}
 					} else {
-						return "该二维码不是你领的红包，请从小程序中领取红包后识别红包二维码"
+						return "该二维码不是你领的红包，请领取红包后识别红包二维码"
 					}
 				} else {
-					return "您未领取红包，请先在小程序里领取红包"
+					return "您未领取红包，请先领取红包"
 				}
 			} else {
 				return "领取红包的二维码错误"

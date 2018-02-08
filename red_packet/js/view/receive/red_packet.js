@@ -44,6 +44,7 @@ new Vue({
 				fileDoMain + that.sendPhotoImg,
 				that.redPacket.blessings,
 				function () {
+					that.openShareTip = false;
 					that.addShare();
 				},
 				function () {},
@@ -65,10 +66,10 @@ new Vue({
 			}
 			if (that.shareNum <= 0) {
 				that.openShareTip = true;
-				layer.alert('你还没有分享红包哦，点击下面的去分享！', {
+				/* layer.alert('你还没有分享红包哦，点击下面的去分享！', {
 					icon: 0,
 					title: '温馨提示'
-				})
+				}) */
 				return;
 			}
 			location.href = '/red_packet/pages/receive/coupon.html?id=' + that.redPacket.id;
@@ -87,16 +88,16 @@ new Vue({
 			}
 			if (that.shareNum <= 0) {
 				that.openShareTip = true;
-				layer.alert('你还没有分享红包哦，点击下面的去分享！', {
+				/* layer.alert('你还没有分享红包哦，点击下面的去分享！', {
 					icon: 0,
 					title: '温馨提示'
-				})
+				}) */
 				return;
 			}
 			that.receiveRedPacket();
 		},
 		closeShare: function () {
-			that.openShareTip = false;
+			this.openShareTip = false;
 		},
 		receiveRedPacket: function () {
 			var that = this;

@@ -46,7 +46,7 @@
                     />
                 </div>
                 <div class="section">
-                    <input class='form-control' placeholder="图形验证码" maxlength='30' name='code' v-model='model.code'/>
+                    <input class='form-control' placeholder="图形验证码" maxlength='6' type='number' name='code' v-model='model.code' v-on:keyup='imgCodeInput'/>
                     <image class="img-code" :src='ImgCodeUrl' mode="widthFix" v-on:click='tapImgCode'></image>
                 </div>
                 <div class="section">

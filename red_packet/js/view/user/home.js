@@ -38,6 +38,17 @@ new Vue({
 			});
 		},
 		scanCoupon: function () {
+			var that = this;
+			if (!that.isLoginAccount) {
+				layer.alert("您的微信未绑定工蜂引流账号！", {
+					title: '温馨提示',
+					icon: 0,
+					btn: "点击绑定账号"
+				}, function () {
+					location.href = '/red_packet/pages/user/account/bind.html';
+				});
+				return;
+			}
 			wechatSDK.scanQRCode(function (result) {
 				common.ajax({
 					url: config.useCouponQrCodeUrl,

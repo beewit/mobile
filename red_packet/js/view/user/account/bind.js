@@ -7,7 +7,7 @@ new Vue({
 		},
 		loading: false,
 		inputPwd: false,
-		Account: { },
+		Account: {},
 		model: {
 			mobile: null
 		},
@@ -48,7 +48,7 @@ new Vue({
 			var that = this;
 			var mobile = that.model.mobile;
 			var code = that.model.code
-			if (mobile.length != 11 || isNaN(mobile)) { 
+			if (mobile.length != 11 || isNaN(mobile)) {
 				layer.msg("请输入有效的手机号码", {
 					icon: 0
 				});
@@ -57,28 +57,65 @@ new Vue({
 			if (common.isEmpty(code)) {
 				layer.msg("请输入图形验证码", {
 					icon: 0
-				}); 
+				});
 				return
 			}
+			that.mobileCodeBtn = true;
+			that.mobileCode = "发送中..";
 			common.ajax({
 				url: config.sendSmsCodeUrl,
 				data: {
 					mobile: mobile,
 					code: code
+				},
+				success: function () {
+					//发送成功，倒计时！  
+					that.countdown(60);
+				},
+				error: function () {
+					//发送失败，启用
+					that.mobileCodeBtn = false;
+					that.mobileCode = "获取验证码";
 				}
 			});
+		},
+		countdown: function (sendTime) {
+			var that = this;
+			if (sendTime <= 0) {
+				that.mobileCode = "获取验证码";
+				that.mobileCodeBtn = false;
+			} else {
+				that.mobileCode = sendTime + "s后重新获取";
+				sendTime--;
+				setTimeout(function () {
+					that.countdown(sendTime)
+				}, 1000)
+			}
 		},
 		mobileInput: function () {
 			var that = this;
 			var mobile = that.model.mobile;
-			if (mobile.length == 11) {
+			if (mobile && mobile.length == 11) {
 				that.mobile = mobile;
-				that.mobileCodeBtn = false;
+				var code = that.model.code;
+				if (!common.isEmpty(code) && code.length == 4) {
+					that.mobileCodeBtn = false;
+				}
 				that.checkMobile(mobile)
 			} else {
 				that.mobile = mobile;
 				that.mobileCodeBtn = true;
 				that.inputPwd = false;
+			}
+		},
+		imgCodeInput: function () {
+			var that = this;
+			var mobile = that.model.mobile;
+			var code = that.model.code;
+			if (mobile && mobile.length == 11 && !common.isEmpty(code) && code.length == 4) {
+				that.mobileCodeBtn = false;
+			} else {
+				that.mobileCodeBtn = true;
 			}
 		},
 		checkMobile: function (mobile) {

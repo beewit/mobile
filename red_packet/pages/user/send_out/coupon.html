@@ -77,9 +77,12 @@
                                 <div class='coupon-money'>
                                     ￥
                                     <b>{{item.money}}</b>
+                                    <img class="coupon-img" :src="fileDoMain+item.photo">
                                 </div>
                                 <div class='coupon-desc'>
-                                    <div class='coupon-condition'>{{item.condition}}</div>
+                                    <div class='coupon-condition'>{{item.name}}
+                                            <span>{{item.condition>0?('满'+item.condition+'可用').replace('.00',''):'无金额门槛'}}</span>
+                                    </div>
                                     <div class='coupon-time'>截止时间：{{item.expire_time}}</div>
                                 </div>
                                 <div class='coupon-handle'>

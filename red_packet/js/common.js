@@ -13,7 +13,7 @@ var common = {
 	ajax: function (options) {
 		var that = this;
 		var defaults = {
-			loadTip: true,
+			loadTip: false,
 			errTip: true,
 			succTip: true,
 			method: "POST",
@@ -67,15 +67,29 @@ var common = {
 				} else if (result.ret == 400) {
 					if (opt.errTip) {
 						if (!that.isEmpty(result.msg)) {
-							layer.alert(result.msg, {
-								icon: 0
-							});
+							if (result.msg.indexOf('您的微信没有绑定工蜂小智帐号') > -1) {
+								if (location.href.indexOf("/user/account/bind.html") < 0 && location.href.indexOf("/user/home.html") < 0) {
+									layer.alert(result.msg, {
+										title: '温馨提示',
+										icon: 0,
+										btn: "点击绑定账号"
+									}, function () {
+										location.href = '/red_packet/pages/user/account/bind.html';
+									});
+								}
+							} else {
+								layer.alert(result.msg, {
+									title: '温馨提示',
+									icon: 0
+								});
+							}
 						}
 					}
 					typeof errorFunc == "function" && errorFunc(res)
 				} else {
 					if (!that.isEmpty(result.msg)) {
 						layer.alert(result.msg, {
+							title: '温馨提示',
 							icon: 0
 						});
 					}
@@ -281,7 +295,12 @@ var common = {
 			return;
 		}
 		if (!isWeiXinBow) {
-			alert("请更换微信使用工蜂引流红包裂变");
+			setTimeout(function () {
+				layer.alert('请更换微信使用工蜂引流红包裂变', {
+					title: '温馨提示',
+					btn: '知道了'
+				});
+			}, 500);
 		}
 	}
 };

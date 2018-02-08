@@ -25,6 +25,9 @@ new Vue({
 				that.isLoginAccount = false;
 			} else {
 				that.isLoginAccount = true;
+				common.getEffectiveFuncById(common.redPacketFuncId, function (res) {
+					that.expireComponyFunc = common.getRedPacketFuncExpireTime()
+				})
 				that.getAuth();
 			}
 		})

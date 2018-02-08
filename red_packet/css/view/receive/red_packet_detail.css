@@ -27,13 +27,13 @@ body {
 .advertQrCode .fl div {
 	display: block;
 	line-height: 20px;
-	margin-bottom: 40rpx;
+	margin-bottom: 20px;
 	color: #fff;
 	font-size: 11pt;
 	text-align: left;
 }
 
-.advertQrCode .fl text.title {
+.advertQrCode .fl .title {
 	font-size: 13pt;
 	font-weight: bold;
 }

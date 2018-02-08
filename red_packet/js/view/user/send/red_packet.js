@@ -12,12 +12,12 @@ new Vue({
 		isLoginAccount: true,
 		model: {
 			sendName: null,
-			sendPhoto: config.defaultPhoto,
+			sendPhoto: null, //config.defaultPhoto,
 			randomMoney: 1,
 			joinCouponIds: null,
 			account_red_packet_card_id: null,
 		},
-		sendPhotoImage: config.defaultPhoto,
+		sendPhotoImage: null, //config.defaultPhoto,
 		redPacketCardId: null,
 		redPacketCardName: null,
 		feeMoney: 0,
@@ -72,6 +72,11 @@ new Vue({
 	},
 	mounted: function () {
 		var that = this;
+		that.model.sendName = Cookies.get('sendRedPacketName');
+		that.model.sendPhoto = Cookies.get('sendRedPacketPhoto');
+		if (!common.isEmpty(that.model.sendPhoto)) {
+			that.sendPhotoImage = fileDoMain + that.model.sendPhoto;
+		}
 		wechatSDK.initConfig(['chooseImage', 'uploadImage', 'previewImage', 'chooseWXPay'], function () {
 			wecatInit = true;
 		});
@@ -81,6 +86,9 @@ new Vue({
 			} else {
 				common.getEffectiveFuncById(common.redPacketFuncId, function () {
 					that.expireComponyFunc = common.getRedPacketFuncExpireTime()
+					if (!that.expireComponyFunc) {
+						that.getRedPacketCardDef();
+					}
 				})
 			}
 		})
@@ -243,6 +251,19 @@ new Vue({
 			that.on = 'index';
 			that.nav.back = 'false';
 			that.nav.title = '发红包';
+		},
+		getRedPacketCardDef: function () {
+			var that = this;
+			if (that.expireComponyFunc || that.redPacketCardId) {
+				return;
+			}
+			common.ajax({
+				url: config.getRedPacketCardDefUrl,
+				success: function (res) {
+					that.model.account_red_packet_card_id = res.data.id;
+					that.redPacketCardName = res.data.name;
+				}
+			})
 		}
 	}
 });

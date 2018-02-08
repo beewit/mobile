@@ -34,10 +34,6 @@
         <div v-cloak>
             <vheader v-bind:nav='nav'></vheader>
             <vnav></vnav>
-
-            <a open-type='navigate' url='/red_packet/pages/user/account/account.html' hidden='{{!isLoginAccount}}'>
-                <div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
-            </a>
             <div id='content'>
                 <div class='coupon-body'>
                     <block v-if='Count>0' v-for="(item,index) in List">
@@ -50,25 +46,28 @@
                             <div class='coupon-top'>
                                 <div class='coupon-money'>
                                     ￥
-                                    <lable>{{item.money}}</lable>
+                                    <b>{{item.money}}</b>
+                                    <img class="coupon-img" :src="fileDoMain+item.photo">
                                 </div>
                                 <div class='coupon-desc'>
-                                    <div class='coupon-condition'>{{item.condition}}</div>
+                                    <div class='coupon-condition'>{{item.name}}
+                                        <span>{{item.condition>0?('满'+item.condition+'可用').replace('.00',''):'无金额门槛'}}</span>
+                                    </div>
                                     <div class='coupon-time'>截止时间：{{item.expire_time}}</div>
                                 </div>
                                 <div class='coupon-handle'>
-                                    <lable v-if='!item.expire && !item.receiveStatus && item.number!=item.receive_number' class='show' bindtap='receive'>领取
+                                    <lable v-if='!item.expire && !item.receiveStatus && item.number!=item.receive_number' class='show' v-on:click='receive(item.id,index)'>领取
                                     </lable>
                                     <lable v-if='item.receiveStatus' class='show disabled'>已领取</lable>
                                 </div>
                             </div>
-                            <div class='coupon-bottom ' :class='item.showDesc?"show-desc":""' bindtap='tapOpenDesc' data-index="{{index}}">
+                            <div class='coupon-bottom ' :class='item.showDesc?"show-desc":""' v-on:click='tapOpenDesc(index)'>
                                 <lable class='icon-jiantou iconfont' :class='item.showDesc?"icon-jiantou-down":"icon-jiantou-up"'></lable>
                                 <div class='coupon-bottom-content'>{{item.desc}}</div>
                             </div>
                         </div>
                     </block>
-                    <div class="loading2 complete" else>无数据或已过期</div> 
+                    <div class="loading2 complete" v-else>无数据或已过期</div>
                 </div>
                 <vfooter></vfooter>
             </div>
@@ -78,4 +77,5 @@
     <script src="/red_packet/js/wechat/config.js"></script>
     <script src="/red_packet/js/view/receive/coupon.js"></script>
 </body>
+
 </html>

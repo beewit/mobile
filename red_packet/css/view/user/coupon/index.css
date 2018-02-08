@@ -41,10 +41,10 @@ html {
 }
 
 .coupon-top {
-  padding: 26px 5px;
+  padding: 20px 5px;
   position: relative;
   z-index: 10;
-  min-height: 40px;
+  min-height: 50px;
 }
 
 .coupon-money {
@@ -68,6 +68,14 @@ html {
   margin-bottom: 5px;
 }
 
+.coupon-desc .coupon-condition span {
+  padding: 2px 10px;
+  background: #dc8338;
+  font-size: 9px;
+  border-radius: 10px;
+  color: #fff7ea;
+}
+
 .coupon-desc .coupon-time {
   font-size: 8pt;
 }
@@ -85,6 +93,7 @@ html {
   padding: 5px 10px;
   color: #e8a438;
   font-size: 9pt;
+  margin: 0 5px;
 }
 
 .coupon-handle .show.disabled {
@@ -235,4 +244,7 @@ html {
   height: 35px;
   display: block;
   margin: 0 auto;
+  margin-top: 5px;
+  border-radius: 50%;
+  border: 1px solid #fff;
 }

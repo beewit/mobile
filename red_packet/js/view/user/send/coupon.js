@@ -21,11 +21,11 @@ new Vue({
 	data: {
 		nav: {
 			back: "false",
-			title: "发红包"
+			title: "发现金券"
 		},
 		model: {
 			name: null,
-			photo: config.defaultPhoto,
+			photo: null, //config.defaultPhoto,
 		},
 		photoImage: null,
 		isLoginAccount: true,
@@ -42,6 +42,11 @@ new Vue({
 				that.isLoginAccount = false;
 			}
 		})
+		that.model.name = Cookies.get('sendCouponName');
+		that.model.photo = Cookies.get('sendCouponPhoto');
+		if (!common.isEmpty(that.model.photo)) {
+			that.photoImage = fileDoMain + that.model.photo;
+		}
 	},
 	methods: {
 		chooseImage: function (event) {
@@ -66,10 +71,10 @@ new Vue({
 				url: config.addCouponUrl,
 				data: that.model,
 				success: function (res) {
-					Cookies.set("sendCouponName", that.model.sendName, {
+					Cookies.set("sendCouponName", that.model.name, {
 						expires: 30
 					});
-					Cookies.set("sendCouponPhoto", that.model.sendPhoto, {
+					Cookies.set("sendCouponPhoto", that.model.photo, {
 						expires: 30
 					});
 					location.href = location.href;

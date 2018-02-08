@@ -34,10 +34,8 @@
         <div v-cloak>
             <vheader v-bind:nav='nav'></vheader>
             <vnav></vnav>
-            <a url='/red_packet/pages/user/account/account' hidden='{{!isLoginAccount}}'>
-                <div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
-            </a>
-            <div class='status top-tip' v-if='Data' :class='Data.status=="审核中"?"in":Data.status=="审核通过"?"success":""'>{{Data.status}}</div>
+            <vbind  v-if='!isLoginAccount'></vbind>
+            <div class='status top-tip' v-if='Data && Data.id>0' :class='Data.status=="审核中"?"in":Data.status=="审核通过"?"success":""'>{{Data.status}}</div>
             <div class="container">
                 <form class='form-view' @submit.prevent="submit">
                     <div>
@@ -90,7 +88,7 @@
                                 <img :src="idCardBackImage" class='fileImg' mode='widthFix'>
                             </div>
                         </div>
-                        <div class='center' wx:if='{{!expireComponyFunc}}'>
+                        <div class='center' v-if='!expireComponyFunc'>
                             <div class='text-small text-gray'>尊贵企业版用户</div>
                         </div>
                         <div class='m-20'>

@@ -59,7 +59,7 @@
                             </a>
                         </div>
                         <div class='handler-item'>
-                            <a v-on:click='openShareTip = false'>
+                            <a v-on:click='openShareTip = true'>
                                 <img class="icon icon-red_packet" src="/red_packet/img/icon/share.png" background-size="cover" /> 去分享</a>
                         </div>
                         <div class='handler-item'>
@@ -113,7 +113,7 @@
                 </div>
             </div>
             <vfooter></vfooter>
-            <vshare v-on:click='closeShare' v-if='openShareTip'></vshare>
+            <vshare v-on:closeshare='closeShare' v-if='openShareTip'></vshare>
         </div>
     </div>
     <script src="/red_packet/js/wechat/jweixin-1.2.0.js"></script>

@@ -820,7 +820,8 @@ button.text-btn::after {
 	}
 }
 
-.big-image {
+.big-image,
+.big-image img {
 	max-width: 100%;
 }
 

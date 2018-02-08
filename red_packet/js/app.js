@@ -33,6 +33,13 @@ Vue.component('vnav', {
 Vue.component('vfooter', {
 	template: '<div class="footer">工蜂智能实验室（9EE3.COM）提供技术支持</div>'
 });
+// 账号绑定提示
+Vue.component('vbind', {
+	template: '<a href="/red_packet/pages/user/account/bind.html">' +
+		'<div class="top-tip">未绑定账号，请先绑定账号，点击绑定</div>' +
+		'</a>'
+});
+
 // 分页标记
 Vue.component('vpage', {
 	props: ['data'],
@@ -46,10 +53,16 @@ Vue.component('vpage', {
 });
 //分享提示
 Vue.component('vshare', {
-	template: '<div class="wxtip" id="JweixinTip">' +
+	props: ['closeshare'],
+	template: '<div class="wxtip" id="JweixinTip" v-on:click="closeshare">' +
 		'<span class="wxtip-icon"></span>' +
 		'<p class="wxtip-txt">点击右上角，分享给好朋友<br>小伙伴们一起抢红包！</p>' +
-		'</div>'
+		'</div>',
+	methods: {
+		closeshare: function () {
+			this.$emit('closeshare')
+		}
+	}
 });
 //联系客服
 Vue.component('vcontact', {

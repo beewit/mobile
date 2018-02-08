@@ -35,9 +35,7 @@
             <vheader v-bind:nav='nav'></vheader>
             <vnav></vnav>
             <div>
-                <a href='/red_packet/pages/user/account/account.html' v-if='!isLoginAccount'>
-                    <div class='top-tip'>未绑定账号，请先绑定账号，点击绑定</div>
-                </a>
+                    <vbind  v-if='!isLoginAccount'></vbind>
                 <div class='func-info' v-else>
                     <div v-if='!ExpireTime' class='func-none'>未开通或已到期</div>
                     <div v-else class='func-record'>已开通企业版，到期时间：{{ExpireTime}}</div>

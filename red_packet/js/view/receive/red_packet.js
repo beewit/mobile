@@ -39,7 +39,7 @@ new Vue({
 				}, 100);
 			}
 			wechatSDK.initShare(
-				that.redPacket.send_name + "，发现金红包啦！",
+				that.redPacket.send_name + "，发红包啦！",
 				location.href,
 				fileDoMain + that.sendPhotoImg,
 				that.redPacket.blessings,
@@ -125,7 +125,7 @@ new Vue({
 						if (res.data.redPacket.pay_state == "已支付") {
 							that.loadEnd = true;
 							that.sendPhotoImg = res.data.redPacket.send_photo;
-							res.data.redPacket.send_photo = config.getFilePath(res.data.redPacket.send_photo);
+							res.data.redPacket.send_photo = config.getThisPath(res.data.redPacket.send_photo);
 							that.recredCouponNum = res.data.couponList.length;
 							that.recredPacketNum = res.data.redPacketList.length;
 							that.couponList = res.data.couponList;
@@ -152,6 +152,7 @@ new Vue({
 			}
 			common.ajax({
 				url: config.shareRedPacketUrl,
+				succTip: false,
 				data: {
 					id: that.redPacket.id
 				},

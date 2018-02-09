@@ -42,6 +42,9 @@ new Vue({
 		})
 	},
 	methods: {
+		tapOpenDesc: function (index) {
+			Vue.set(this.List.Data[index], 'showDesc', !this.List.Data[index].showDesc)
+		},
 		navChange: function (type) {
 			this.Where = type;
 			loadPage.unlock();

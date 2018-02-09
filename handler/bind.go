@@ -95,7 +95,7 @@ func BindWeechatAccount(c echo.Context) error {
 		//}
 	}
 	//return utils.SuccessNullMsg(c, u)
-	return utils.Alert(c, "绑定成功,右键请刷新当前页面")
+	return utils.Alert(c, "绑定成功,请刷新当前页面")
 }
 
 func getWechatUserInfo(c echo.Context) error {

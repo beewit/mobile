@@ -81,19 +81,27 @@
                 <div class='coupon-view'>
                     <div v-for="(item,index) in List.Data" class="coupon-item">
                         <div class='coupon-item-body'>
-                            <div class='fl'>
+                            <div class='item-content'>
                                 <div>
                                     <div class='money fl'>
                                         ￥{{item.money}}
                                     </div>
                                     <img :src='config.getFilePath(item.send_photo)' class='photo fl'></img>
-                                    <div class='condition fl'>
+                                    <div class='condition '>
                                         {{item.send_name}}
                                     </div>
                                 </div>
+                                <div class="item-result" v-if='item.pay_state=="已支付" && item.review_status=="审核通过"'>
+                                    <label>已发送金额：<b>￥{{item.send_money}}</b></label>
+                                    <label>影响力(次)：<b>{{item.influenceNum}}</b></label>
+                                    <label>随机金额：<b>￥{{item.random_money==1?"1":("1~"+item.random_money).replace(".00","")}}</b></label>
+                                </div>
                                 <div class='text-small desc'>
                                     <div class='title fl'>问候语：</div>{{item.blessings}}</div>
-                                <div class='text-small desc'>{{item.remarks}}</div>
+                                <div class='text-small desc remarks' :class='item.showDesc?"show-desc":""' v-on:click='tapOpenDesc(index)'>
+                                    <div class="content">{{item.remarks}}</div>
+                                    <lable class='icon-jiantou iconfont' :class='item.showDesc?"icon-jiantou-down":"icon-jiantou-up"'></lable>
+                                </div>
                             </div>
                             <a v-if='item.pay_state=="已支付" && item.review_status=="审核通过"' :href='"/red_packet/pages/receive/red_packet.html?id="+item.id'>
                                 <button type='warn' class='btn-small' size='mini'>去分享</button>

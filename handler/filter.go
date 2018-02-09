@@ -137,8 +137,8 @@ func WechatFilter(next echo.HandlerFunc) echo.HandlerFunc {
 			}
 			us := convert.ToObjStr(u)
 			global.Log.Info("oauth userinfo：%s", us)
-			//7天
-			global.RD.SetAndExpire(mpSessionId, us, 7*12*60*60)
+			//30天
+			global.RD.SetAndExpire(mpSessionId, us, 30*12*60*60)
 			c.Set(OauthUserInfo, u)
 			c.Set(MPSessionId, mpSessionId)
 		} else {

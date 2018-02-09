@@ -90,6 +90,9 @@ new Vue({
 						that.getRedPacketCardDef();
 					}
 				})
+				that.getCouponList(1, function () {
+
+				});
 			}
 		})
 	},
@@ -161,9 +164,14 @@ new Vue({
 			this.on = 'coupon';
 			this.nav.back = true;
 			this.nav.title = '选择展示现金券';
-			if (this.couponList.PageIndex == 0) {
+
+			if (this.couponList.PageIndex == 1) {
+				that.couponList = {
+					PageIndex: 0,
+					Data: {}
+				}
 				setTimeout(function () {
-					common.scroll("#content", function (load, reset) {
+					common.scroll("#contentCoupon", function (load, reset) {
 						loadPage = load;
 						that.getCouponList(1, reset);
 					}, function (load, reset) {
@@ -180,7 +188,7 @@ new Vue({
 			this.nav.title = '选择红包名片';
 			if (this.cardList.PageIndex == 0) {
 				setTimeout(function () {
-					common.scroll("#content", function (load, reset) {
+					common.scroll("#contentCard", function (load, reset) {
 						loadPage = load;
 						that.getCardList(1, reset);
 					}, function (load, reset) {
@@ -190,7 +198,7 @@ new Vue({
 				}, 100);
 			}
 		},
-		getCouponList: function (pageIndex) {
+		getCouponList: function (pageIndex, backFunc) {
 			var that = this;
 			common.ajax({
 				url: config.getCouponListUrl,
@@ -200,16 +208,36 @@ new Vue({
 				success: function (res) {
 					if (pageIndex == 1) {
 						that.couponList = res.data;
+						if (res.data.Count <= 0) {
+							//提示代金券编辑
+							setTimeout(function () {
+								layer.alert("本次发送红包是否需要发送现金券？", {
+									title: '温馨提示',
+									icon: 6,
+									btn: ["立即发送现金券", "不发送"]
+								}, function () {
+									location.href = '/red_packet/pages/user/send/coupon.html';
+								});
+							}, 100);
+						}
 					} else {
 						that.couponList.Data.reverse()
 						for (var d in that.couponList.Data) {
-							res.data.Data.push(this.couponList.Data[d])
+							res.data.Data.push(that.couponList.Data[d])
 						}
 						that.couponList.Data.reverse()
 						res.data.isLoadData = true;
 						that.couponList = res.data;
 					}
 					Vue.set(that, "couponList", that.couponList);
+					setTimeout(function () {
+						typeof backFunc == "function" && backFunc(res);
+					}, 500);
+				},
+				error: function () {
+					setTimeout(function () {
+						typeof backFunc == "function" && backFunc(null);
+					}, 500);
 				}
 			});
 		},

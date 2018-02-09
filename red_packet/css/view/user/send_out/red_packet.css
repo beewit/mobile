@@ -45,7 +45,7 @@ html {
 }
 
 .coupon-item {
-	font-size: 14pt; 
+	font-size: 14pt;
 	clear: left;
 	position: relative;
 }
@@ -53,8 +53,8 @@ html {
 .coupon-item .coupon-item-body {
 	padding: 10px 20px;
 	overflow: hidden;
-    background: #ffffff;
-    margin-top: 1px;
+	background: #ffffff;
+	margin-top: 1px;
 }
 
 .money {
@@ -71,7 +71,7 @@ html {
 .desc {
 	color: #888;
 	clear: left;
-	padding-right: 30px;
+	padding-right: 20px;
 }
 
 .desc .title {
@@ -104,4 +104,35 @@ html {
 	right: 10px;
 	color: red;
 	font-size: 11pt;
+}
+
+.remarks {
+	position: relative;
+	overflow: hidden;
+}
+
+.icon-jiantou {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	z-index: 11;
+}
+
+.desc .content {
+	height: 18px;
+	color: #b1afaf;
+}
+
+.show-desc .content {
+	height: auto !important
+}
+
+.item-result {
+	font-size: 12px;
+	line-height: 25px;
+	color: #8e6b6b;
+}
+
+.item-result b {
+	color: #f90
 }

@@ -70,6 +70,7 @@ Vue.component('vcontact', {
 		'<a class="text-btn blue" href="http://qm.qq.com/cgi-bin/qm/qr?k=0Zy-3dblwO02GlxOtYLGGGCuv89pSFIX"> 联系客服</a>' +
 		'</div>'
 });
+var thisDoMain = "https://m.9ee3.com/";
 var fileDoMain = "https://file.9ee3.com/";
 var ssoHost = "/sso"; //"https://sso.9ee3.com";
 var hiveHost = "/hive"; //"https://hive.9ee3.com";
@@ -81,6 +82,7 @@ var config = {
 	// 下面的地址配合云端 Server 工作
 	ssoHost,
 	fileHost,
+	thisDoMain,
 	//[sso] 用code换取openId
 	loginAccountUrl: `${ssoHost}/union/mp/app/login`,
 	checkTokenUrl: `${ssoHost}/pass/checkToken`,
@@ -155,5 +157,8 @@ var config = {
 	downloadExampleUrl: `${fileHost}`,
 	getFilePath: function (path) {
 		return config.fileHost + path.replace("files/", "")
+	},
+	getThisPath: function (path) {
+		return config.thisDoMain + path.replace("files/", "file/")
 	}
 };

@@ -124,7 +124,7 @@
 				</div>
 				<!--@click="on = 'index'"-->
 				<div v-else-if="on == 'coupon'">
-					<div id="content">
+					<div id="contentCoupon">
 						<div class='coupon-page coupon-view'>
 							<div v-for="(item,index) in couponList.Data" class="coupon-item" v-on:click="tapSelectCoupon(index)">
 								<div class='coupon-item-body'>
@@ -153,7 +153,7 @@
 								<button class='text-gray' class='addCardBtn'> 新建红包卡片</button>
 							</a>
 						</div>
-						<div id='content'>
+						<div id='contentCard'>
 							<div class='m'>
 								<div class='card-list'>
 									<div v-if="cardList.Count<=0">

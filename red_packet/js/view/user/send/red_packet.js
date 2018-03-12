@@ -211,10 +211,10 @@ new Vue({
 						if (res.data.Count <= 0) {
 							//提示代金券编辑
 							setTimeout(function () {
-								layer.alert("本次发送红包是否需要发送现金券？", {
+								layer.alert("本次发送红包是否附加现金券？", {
 									title: '温馨提示',
 									icon: 6,
-									btn: ["立即发送现金券", "不发送"]
+									btn: ["立即发现金券", "不发"]
 								}, function () {
 									location.href = '/red_packet/pages/user/send/coupon.html';
 								});

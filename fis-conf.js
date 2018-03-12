@@ -3,6 +3,11 @@ fis.match('*.{js,css,jpg,gif,png}', {
     useHash: true
 });
 
+// 加 md5
+fis.match('red_packet/js/layer/**', {
+    useHash: false
+});
+
 // 启用 fis-spriter-csssprites 插件
 fis.match('::package', {
     spriter: fis.plugin('csssprites')
@@ -34,3 +39,19 @@ fis.match('*.png', {
     optimizer: fis.plugin('png-compressor')
 }); 
 
+fis.set('project.ignore', [
+    'output/**',
+    'app/**',
+    'global/**',
+    'handler/**',
+    'router/**',
+    'config.json',
+    'debug',
+    'debug.test',
+    'fileauth.txt',
+    'mobile',
+    'mobile_test.go',
+    'mobile.go',
+    'README.md',
+    'fis-conf.js'
+  ]);

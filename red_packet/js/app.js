@@ -64,7 +64,6 @@ Vue.component('vshare', {
 		}
 	}
 });
-document.getElementById().innerText
 //联系客服
 Vue.component('vcontact', {
 	template: '<div class="mtb">' +

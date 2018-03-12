@@ -13,6 +13,7 @@ new Vue({
 		model: {
 			sendName: null,
 			sendPhoto: null, //config.defaultPhoto,
+            money:null,
 			randomMoney: 1,
 			joinCouponIds: null,
 			account_red_packet_card_id: null,
@@ -121,6 +122,13 @@ new Vue({
 			this.model.randomMoney = id;
 			console.log(event)
 		},
+        changMoney:function () {
+            var that = this;
+            if(that.model.money && that.model.money!="") {
+                console.log(that.model.money);
+                that.feeMoney =(parseFloat(that.model.money)*0.2).toFixed(2);
+            }
+        },
 		tapSelectCoupon: function (index) {
 			if (this.couponList.Data[index].cls) {
 				Vue.set(this.couponList.Data[index], 'cls', null)

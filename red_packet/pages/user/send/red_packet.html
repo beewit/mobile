@@ -55,7 +55,7 @@
 								</div>
 								<div class="section">
 									<div class='form-title'>总金额</div>
-									<input name='money' class='form-control' placeholder="红包总金额" type='number' v-model='model.money' />
+									<input name='money' class='form-control' placeholder="红包总金额" type='number' v-model='model.money' v-on:keyup="changMoney" />
 									<div class='unit'>元</div>
 								</div>
 								<div class="section">
@@ -102,7 +102,7 @@
 									</div>
 								</div>
 								<div class='center' v-if="expireComponyFunc">
-									<label class='text-small text-gray'>收取2%的服务费</label>
+									<label class='text-small text-gray'>收取20%的服务费</label>
 									<label class='text-small text-orange text-bold'>¥{{feeMoney}}，</label>
 									<a href="/red_packet/pages/user/open/func.html" class='text-small text-navigator text-skyblue'>开通企业版即可免服务费 >></a>
 								</div>

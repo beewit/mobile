@@ -46,11 +46,17 @@ func Start() {
 	e.POST("/account/create/temporary/qrcode", handler.CreateTemporarySceneStrQrCode)
 	//永久二维码
 	//e.POST("/account/create/permanent/qrcode", handler.CreatePermanentQRCode)
+	//创建微信公众号菜单
+	e.GET("/menu/create", handler.CreateMenu)
 
 	e.POST("/wechat/jssdk/config", handler.GetJSSDKConfig)
 	e.POST("/wechat/media/download", handler.DownloadMedia)
 	e.GET("/wechat/oauth/get", handler.GetMPSessionId, handler.WechatFilter)
 	e.GET("/test/cookie", handler.TestCookie)
+
+	e.GET("/menu/help", func(c echo.Context) error {
+		return utils.Redirect(c,"https://mp.weixin.qq.com/mp/homepage?__biz=MzU0NDI2NjgyMA==&hid=3&sn=c411aa55c4c766ab9e474338f66a4f8d#wechat_redirect")
+	})
 
 	utils.Open(global.Host)
 

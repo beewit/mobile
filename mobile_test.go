@@ -1,6 +1,8 @@
 package main_test
 
 import (
+	fmt "fmt"
+	"net/url"
 	"testing"
 
 	"github.com/beewit/beekit/utils"
@@ -8,15 +10,12 @@ import (
 	"github.com/beewit/mobile/global"
 	"github.com/beewit/wechat/mp"
 	"github.com/beewit/wechat/mp/account"
-	"github.com/beewit/wechat/mp/oauth2"
 )
 
 func TestRedisList(t *testing.T) {
-	at := oauth2.AccessToken{}
-	at.AccessToken = "123"
-	at.ExpiresIn = 7200
-	at.OpenId = "481312312312313"
-	println(convert.ToObjStr(at))
+
+	l3, _ := url.Parse("https://mp.weixin.qq.com/mp/homepage?__biz=MzU0NDI2NjgyMA==&hid=3&sn=c411aa55c4c766ab9e474338f66a4f8d#wechat_redirect")
+	fmt.Println(l3.Path+l3.Query().Encode())
 }
 
 func TestTLS(t *testing.T) {

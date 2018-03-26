@@ -3,14 +3,14 @@ new Vue({
 	data: {
 		nav: {
 			lhref: null,
-			title: '工蜂引流 - 发红包啦！'
+			title: '工蜂传媒 - 发红包啦！'
 		},
 		id: null,
 		qrcode: null,
 		redPacket: {
 			send_photo: config.defaultPhoto,
-			send_name: "工蜂引流",
-			blessings: "祝大家新年快乐",
+			send_name: "工蜂传媒",
+			blessings: "祝大家健康快乐",
 		},
 		card: {
 			name: "红包裂变",

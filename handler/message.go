@@ -78,7 +78,11 @@ func sendRedPacket(eventKey, openId string) string {
 				if rows != nil && len(rows) == 1 {
 					receiveRedPacket := rows[0]
 					if convert.ToString(receiveRedPacket["receiveStatus"]) != enum.RED_PACKET_STATUS_NOT {
-						return "红包已被领取"
+						if convert.ToString(receiveRedPacket["receiveStatus"]) == enum.RED_PACKET_STATUS_FAIL {
+							return "发放红包失败"
+						} else {
+							return "红包已被领取"
+						}
 					}
 					redPacketId := convert.MustInt64(receiveRedPacket["id"])
 					receiveRedPacketId := convert.MustInt64(receiveRedPacket["receiveId"])
@@ -226,7 +230,7 @@ func sendRedPacket(eventKey, openId string) string {
 	return "你好！欢迎关注工蜂小智"
 }
 
-func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, act_name, remark string) (bool, string) {
+func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, actName, remark string) (bool, string) {
 	//查询红包来源，判断是否有领红包可能
 	client, err := mp.NewTLSHttpClient("/home/zxb/cert/apiclient_cert.pem", "/home/zxb/cert/apiclient_key.pem")
 	if err != nil {
@@ -245,14 +249,14 @@ func sendMoneyHandle(fromUserName string, billno int64, money int, wishing, act_
 		req["total_amount"] = convert.ToString(money) //单位分
 		//红包发放总人数
 		req["total_num"] = "1"
-		//红包祝福语
-		req["wishing"] = wishing
+		//红包祝福语，最长32个字符
+		req["wishing"] = utils.SubStrByByteInChar(wishing, 128)
 		//调用接口的机器Ip地址
 		req["client_ip"] = "106.14.169.82"
-		//活动名称
-		req["act_name"] = act_name
-		//备注
-		req["remark"] = remark
+		//活动名称，最长32个字符
+		req["act_name"] = utils.SubStrByByteInChar(actName, 32)
+		//备注，最长256个字符
+		req["remark"] = utils.SubStrByByteInChar(remark, 256)
 		/*
 			发放红包使用场景，红包金额大于200时必传
 				PRODUCT_1:商品促销

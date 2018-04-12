@@ -40,8 +40,7 @@ func TestQrCode(t *testing.T) {
 }
 
 func TestCode(t *testing.T) {
-	println(convert.ToString(convert.MustInt("1234567000")))
-	println(uint32(convert.MustInt("1234567000")))
+	println(utils.SubStrByByteInChar("sdf大概是电饭锅大sdsd概是电sdf饭锅大概是sdf电饭锅大概是电饭锅大概是电饭锅大概是sdf电饭锅大概是电饭锅大概是电饭锅大概是电饭锅大概是电饭锅大概是电饭锅大概是电饭锅", 32))
 }
 
 func TestDBQrcode(t *testing.T) {

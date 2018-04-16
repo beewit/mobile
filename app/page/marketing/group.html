@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 10px;
+        }
+
+        .title {
+            border-left: 5px solid #e45656;
+            padding-left: 10px;
+            line-height: 17px;
+        }
+
+        .title a {
+            float: right;
+            color: #2196F3;
+            font-size: 12px;
+            margin-top: 3px;
+            text-decoration: none;
+        }
+
+        hr {
+            height: 0;
+            border-top: 1px solid #dadada;
+            -webkit-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+    </style>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<h4 class="title">微信营销统计 <a href="" style="float:right">详细记录>></a></h4>
+<div id="wechat" style="width: 100%;height:400px;"></div>
+<hr>
+<h4 class="title">QQ营销统计 <a href="" style="float:right">详细记录>></a></h4>
+<div id="qq" style="width: 100%;height:400px;"></div>
+<hr>
+<h4 class="title">微博/人脉通营销统计 <a href="" style="float:right">详细记录>></a></h4>
+<div id="other" style="width: 100%;height:400px;"></div>
+<script src="https://cdn.bootcss.com/echarts/4.0.4/echarts.min.js"></script>
+<script src="../../js/jquery/jquery-3.2.1.min.js"></script>
+<script src="../../js/app.js"></script>
+<script type="text/javascript">
+    var wechatChart = echarts.init(document.getElementById('wechat'));
+    var qqChart = echarts.init(document.getElementById('qq'));
+    var otherChart = echarts.init(document.getElementById('other'));
+    option = {
+        legend: {},
+        tooltip: {},
+        dataset: {
+            dimensions: ['name', '加通讯录好友', '群发好友', '群群发', '朋友圈点赞', '附近人打招呼', '快速分发', '手机号码生成'],
+            source: [
+                {
+                    'name': '近一个月统计',
+                    '加通讯录好友': 59,
+                    '群发好友': 43.3,
+                    '群群发': 85.8,
+                    '朋友圈点赞': 93.7,
+                    '附近人打招呼': 56,
+                    '快速分发': 48,
+                    '手机号码生成': 69
+                }
+            ]
+        },
+        grid: [{
+            top: 90,
+            width: '100%',
+            bottom: 10,
+            left: 0,
+            containLabel: true
+        }],
+        xAxis: {type: 'category'},
+        yAxis: {},
+        series: [
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                },
+                type: 'bar'
+            },
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                },
+                type: 'bar'
+            },
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                }, type: 'bar'
+            },
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                }, type: 'bar'
+            },
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                }, type: 'bar'
+            },
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                }, type: 'bar'
+            },
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                }, type: 'bar'
+            },
+            {
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                }, type: 'bar'
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    wechatChart.setOption(option);
+    qqChart.setOption(option);
+    otherChart.setOption(option);
+
+    window.onload = function () {
+
+    };
+
+    $(function () {
+        var token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.ctpfbuG_wYNsxRNL9anHwveAXPSaJnSW_TRdTFKD0V0";
+        $.post(config.funcHandleLogGroupUrl, {token: token}, function (i, item) {
+
+        });
+    });
+</script>
+
+</body>
+</html>
